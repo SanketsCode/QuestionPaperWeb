@@ -197,7 +197,7 @@ export default function CompetitionExamPage() {
           </div>
           <div className="mt-4 text-sm">{questionContent.text}</div>
           <div className="mt-6 grid gap-3">
-            {options.map((option, index) => {
+            {options.map((option: ResolvedContent, index: number) => {
               const isSelected = answers[currentQuestion._id] === index;
               return (
                 <button

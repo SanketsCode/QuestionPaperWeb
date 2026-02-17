@@ -7,10 +7,15 @@ import { useRouter, useSearchParams } from "next/navigation";
 import AuthShell from "../ui/auth/AuthShell";
 import { useEffect } from "react";
 
-export default function LoginPage() {
+import { Suspense } from "react";
+
+function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
   const next = params.get("next");
+  const [mobile, setMobile] = useState("");
+  const [error, setError] = useState("");
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     const token = localStorage.getItem("qp_access_token");
@@ -18,8 +23,6 @@ export default function LoginPage() {
       router.replace(next || "/home");
     }
   }, [next, router]);
-  const [mobile, setMobile] = useState("");
-  const [error, setError] = useState("");
 
   const mutation = useMutation({
     mutationFn: sendOtp,
@@ -91,5 +94,13 @@ export default function LoginPage() {
         </p>
       </form>
     </AuthShell>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginForm />
+    </Suspense>
   );
 }

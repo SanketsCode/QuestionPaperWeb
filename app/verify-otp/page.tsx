@@ -8,7 +8,9 @@ import AuthShell from "../ui/auth/AuthShell";
 
 const OTP_LENGTH = 6;
 
-export default function VerifyOtpPage() {
+import { Suspense } from "react";
+
+function VerifyOtpForm() {
   const router = useRouter();
   const params = useSearchParams();
   const mobile = params.get("mobile") ?? "";
@@ -153,5 +155,13 @@ export default function VerifyOtpPage() {
         </button>
       </form>
     </AuthShell>
+  );
+}
+
+export default function VerifyOtpPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyOtpForm />
+    </Suspense>
   );
 }

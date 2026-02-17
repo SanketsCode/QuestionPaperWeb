@@ -59,7 +59,7 @@ export default function PaperDetailsPage() {
             Instructions
           </p>
           <h1 className="mt-3 font-display text-3xl">
-            {paper.title || paper.exam_name}
+            {paper.exam_name}
           </h1>
           <p className="mt-2 text-sm text-muted">
             Prepare for the exam with clear instructions.

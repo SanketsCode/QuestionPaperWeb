@@ -130,7 +130,6 @@ export type Competition = {
   status?: "upcoming" | "live" | "completed" | "cancelled";
   startDateTime?: string;
   endDateTime?: string;
-  durationInMinutes?: number;
 };
 
 export type CompetitionSession = {
