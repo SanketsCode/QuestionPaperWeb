@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getMyProfile } from "../../lib/api";
+import { useLanguage } from "../LanguageContext";
 
 type StoredUser = {
   _id?: string;
@@ -23,6 +24,7 @@ type StoredUser = {
 export default function ProfilePage() {
   const [user, setUser] = useState<StoredUser | null>(null);
   const [loading, setLoading] = useState(false);
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -55,28 +57,36 @@ export default function ProfilePage() {
   return (
     <div className="px-6 py-10 md:px-10">
       <div className="mx-auto max-w-5xl space-y-8">
-        <header className="rounded-[28px] border border-border bg-card p-6">
-          <p className="text-xs uppercase tracking-[0.3em] text-muted">
-            Profile
-          </p>
-          <h1 className="mt-3 font-display text-3xl">
-            {user?.name || "Learner"}
-          </h1>
-          <p className="mt-2 text-sm text-muted">
-            {user?.contact || user?.email || "No contact info"}
-          </p>
+        <header className="flex items-start justify-between rounded-[28px] border border-border bg-card p-6">
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-muted">
+              {t("profile.title")}
+            </p>
+            <h1 className="mt-3 font-display text-3xl">
+              {user?.name || "Learner"}
+            </h1>
+            <p className="mt-2 text-sm text-muted">
+              {user?.contact || user?.email || "No contact info"}
+            </p>
+          </div>
+          <a
+            href="/profile/edit"
+            className="rounded-full border border-border px-4 py-2 text-xs font-semibold hover:bg-gray-50"
+          >
+            {t("profile.edit")}
+          </a>
         </header>
 
         <div className="rounded-3xl border border-border bg-card p-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <div className="text-sm font-semibold">Subscription</div>
+              <div className="text-sm font-semibold">{t("nav.subscription")}</div>
               <div className="mt-2 text-xs text-muted">
                 {user?.planName || "Free plan"}
               </div>
               {user?.subscriptionEndDate ? (
                 <div className="mt-1 text-xs text-muted">
-                  Expires on{" "}
+                  {t("profile.expiresOn")}{" "}
                   {new Date(user.subscriptionEndDate).toLocaleDateString()}
                 </div>
               ) : null}
@@ -85,14 +95,14 @@ export default function ProfilePage() {
               href="/subscription"
               className="rounded-full bg-brand px-5 py-2 text-sm font-semibold text-white"
             >
-              Manage plan
+              {t("profile.managePlan")}
             </a>
           </div>
         </div>
 
         {user?.purchasedPackages?.length ? (
           <div className="rounded-3xl border border-border bg-white/70 p-6">
-            <div className="text-sm font-semibold">Purchased packages</div>
+            <div className="text-sm font-semibold">{t("profile.purchasedPackages")}</div>
             <div className="mt-4 grid gap-3">
               {user.purchasedPackages.map((pkg, index) => (
                 <div
@@ -102,7 +112,7 @@ export default function ProfilePage() {
                   <div className="font-semibold">{pkg.planName}</div>
                   <div className="mt-1 text-muted">{pkg.categoryName}</div>
                   <div className="mt-1 text-muted">
-                    Ends {new Date(pkg.endDate).toLocaleDateString()}
+                    {t("profile.ends")} {new Date(pkg.endDate).toLocaleDateString()}
                   </div>
                 </div>
               ))}
@@ -162,13 +172,13 @@ export default function ProfilePage() {
             onClick={refreshProfile}
             disabled={loading}
           >
-            {loading ? "Refreshing..." : "Refresh profile"}
+            {loading ? t("profile.refreshing") : t("profile.refresh")}
           </button>
           <button
             className="rounded-full border border-rose-200 bg-rose-50 px-5 py-2 text-sm font-semibold text-rose-700"
             onClick={handleLogout}
           >
-            Logout
+            {t("profile.logout")}
           </button>
         </div>
       </div>

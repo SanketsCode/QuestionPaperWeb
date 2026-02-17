@@ -9,6 +9,7 @@ import {
   getMyAcademyUpcomingTests,
 } from "../../lib/api";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useLanguage } from "../LanguageContext";
 
 type TabKey = "notifications" | "upcoming" | "papers";
 
@@ -41,6 +42,7 @@ function normalizePhone(value: string) {
 }
 
 export default function MyAcademyPage() {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<TabKey>("notifications");
   const [tabData, setTabData] = useState<{
     notifications: any[];
@@ -88,14 +90,14 @@ export default function MyAcademyPage() {
     return (
       <div className="space-y-6">
         <div className="rounded-3xl border border-border bg-card p-8 text-center">
-          <div className="text-lg font-semibold">Join an academy</div>
+          <div className="text-lg font-semibold">{t("academy.joinTitle")}</div>
           <p className="mt-2 text-sm text-muted">
-            Browse verified academies and connect to enroll.
+            {t("academy.joinDesc")}
           </p>
         </div>
         {academiesQuery.isLoading ? (
           <div className="rounded-3xl border border-border bg-card p-6 text-sm text-muted">
-            Loading academies...
+            {t("academy.loading")}
           </div>
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
@@ -160,13 +162,13 @@ export default function MyAcademyPage() {
       <div className="mx-auto max-w-6xl space-y-8">
         <header className="rounded-[28px] border border-border bg-card p-6">
           <p className="text-xs uppercase tracking-[0.3em] text-muted">
-            My Academy
+            {t("academy.title")}
           </p>
           <h1 className="mt-3 font-display text-3xl">
-            {academy?.name || "Academy workspace"}
+            {academy?.name || t("academy.subtitle")}
           </h1>
           <p className="mt-2 text-sm text-muted">
-            Notifications, upcoming tests, and practice papers.
+            {t("academy.description")}
           </p>
         </header>
 
@@ -186,7 +188,7 @@ export default function MyAcademyPage() {
                         : "text-muted hover:text-foreground"
                     }`}
                   >
-                    {tab.label}
+                    {t(`academy.tabs.${tab.key}`)}
                   </button>
                 ))}
               </div>
@@ -212,7 +214,7 @@ export default function MyAcademyPage() {
                 </div>
               ) : (
                 <div className="rounded-3xl border border-dashed border-border bg-card p-10 text-center text-sm text-muted">
-                  No notifications yet.
+                  {t("academy.noNotifications")}
                 </div>
               )
             ) : null}
@@ -249,15 +251,15 @@ export default function MyAcademyPage() {
                             href={`/question-paper/${item.paperId?._id || item.paperId}?academy=1`}
                             className="mt-4 inline-flex rounded-full bg-brand px-4 py-2 text-xs font-semibold text-white"
                           >
-                            Open test
+                            {t("academy.openTest")}
                           </a>
                         ) : (
                           <div className="mt-4 text-xs text-muted">
                             {isLocked
-                              ? `Locked until ${new Date(
+                              ? `${t("academy.locked")} ${new Date(
                                   item.startAt
                                 ).toLocaleDateString()}`
-                              : "Test ended"}
+                              : t("academy.ended")}
                           </div>
                         )}
                       </div>
@@ -266,7 +268,7 @@ export default function MyAcademyPage() {
                 </div>
               ) : (
                 <div className="rounded-3xl border border-dashed border-border bg-card p-10 text-center text-sm text-muted">
-                  No upcoming exams.
+                  {t("academy.noUpcoming")}
                 </div>
               )
             ) : null}
@@ -290,14 +292,14 @@ export default function MyAcademyPage() {
                         href={`/question-paper/${item._id}?academy=1`}
                         className="mt-4 inline-flex rounded-full bg-brand px-4 py-2 text-xs font-semibold text-white"
                       >
-                        Open test
+                        {t("academy.openTest")}
                       </a>
                     </div>
                   ))}
                 </div>
               ) : (
                 <div className="rounded-3xl border border-dashed border-border bg-card p-10 text-center text-sm text-muted">
-                  No practice papers available.
+                  {t("academy.noPapers")}
                 </div>
               )
             ) : null}

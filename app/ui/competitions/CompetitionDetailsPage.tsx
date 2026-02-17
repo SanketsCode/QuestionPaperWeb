@@ -5,8 +5,10 @@ import { useParams, useRouter } from "next/navigation";
 import {
   Competition,
   getCompetitionById,
+  getMyCompetitionSubmissions,
   startCompetitionExam,
 } from "../../lib/api";
+import { useLanguage } from "../LanguageContext";
 
 function formatDateTime(dateTime?: string) {
   if (!dateTime) return "—";
@@ -23,11 +25,17 @@ export default function CompetitionDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const id = params?.id as string;
+  const { t } = useLanguage();
 
   const competitionQuery = useQuery({
     queryKey: ["competition", id],
     queryFn: () => getCompetitionById(id),
     enabled: !!id,
+  });
+
+  const submissionsQuery = useQuery({
+    queryKey: ["my-competition-submissions"],
+    queryFn: getMyCompetitionSubmissions,
   });
 
   const startMutation = useMutation({
@@ -54,7 +62,12 @@ export default function CompetitionDetailsPage() {
     );
   }
 
+  const submission = (submissionsQuery.data || []).find(
+    s => s.competitionId === id
+  );
   const status = (competition.status || "upcoming").toLowerCase();
+  const hasSubmitted = submission?.status === "submitted";
+  const hasStarted = submission?.status === "started";
 
   return (
     <div className="px-6 py-10 md:px-10">
@@ -120,20 +133,42 @@ export default function CompetitionDetailsPage() {
             className="rounded-full border border-border px-5 py-3 text-sm font-semibold"
             onClick={() => router.push("/competitions")}
           >
-            Back to list
+            {t("common.back")}
           </button>
-          <button
-            className="rounded-full bg-brand px-5 py-3 text-sm font-semibold text-white"
-            disabled={status !== "live" && status !== "upcoming"}
-            onClick={() => startMutation.mutate(id)}
-          >
-            {status === "live" ? "Start now" : "Start when live"}
-          </button>
+          
+          {hasSubmitted ? (
+             <button
+              className="rounded-full bg-brand px-5 py-3 text-sm font-semibold text-white"
+              onClick={() => router.push(`/competitions/${id}/leaderboard`)}
+            >
+              {t("competitions.viewResult")}
+            </button>
+          ) : hasStarted && status === "live" ? (
+             <button
+              className="rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-700"
+              onClick={() => router.push(`/competitions/${id}/exam`)}
+            >
+              {t("competitions.resume")}
+            </button>
+          ) : (
+            <button
+              className="rounded-full bg-brand px-5 py-3 text-sm font-semibold text-white disabled:opacity-50"
+              disabled={status !== "live"}
+              onClick={() => startMutation.mutate(id)}
+            >
+              {status === "live" 
+                ? t("competitions.start") 
+                : status === "completed" 
+                    ? t("competitions.completed") 
+                    : "Start when live"}
+            </button>
+          )}
+
           <button
             className="rounded-full border border-border px-5 py-3 text-sm font-semibold"
             onClick={() => router.push(`/competitions/${id}/leaderboard`)}
           >
-            Leaderboard
+            {t("competitions.leaderboard")}
           </button>
         </div>
       </div>

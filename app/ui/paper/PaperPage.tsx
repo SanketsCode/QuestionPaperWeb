@@ -10,6 +10,7 @@ import {
   getExamSubCategories,
   getQuestionPapersPaged,
 } from "../../lib/api";
+import { useLanguage } from "../LanguageContext";
 
 export default function PaperPage() {
   const [selectedCategory, setSelectedCategory] = useState<ExamCategory | null>(
@@ -19,6 +20,7 @@ export default function PaperPage() {
     useState<ExamSubCategory | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [appliedSearch, setAppliedSearch] = useState("");
+  const { t } = useLanguage();
 
   const categoriesQuery = useQuery({
     queryKey: ["paper", "categories"],
@@ -89,10 +91,10 @@ export default function PaperPage() {
       <div className="mx-auto max-w-6xl space-y-8">
         <header className="rounded-[28px] border border-border bg-card p-6">
           <p className="text-xs uppercase tracking-[0.3em] text-muted">
-            Exam papers
+            {t("paper.title")}
           </p>
           <h1 className="mt-3 font-display text-3xl">
-            Previous year & real exams
+            {t("paper.subtitle")}
           </h1>
         </header>
 
@@ -181,8 +183,8 @@ export default function PaperPage() {
                   {paper.exam_name || paper.title}
                 </div>
                 <div className="mt-2 text-xs text-muted">
-                  {paper.total_que_count || paper.total_questions || 0} questions ·{" "}
-                  {paper.duration || paper.exam_due_min || 0} mins
+                  {paper.total_que_count || paper.total_questions || 0} {t("paper.questions")} ·{" "}
+                  {paper.duration || paper.exam_due_min || 0} {t("paper.mins")}
                 </div>
               </a>
             ))}

@@ -3,6 +3,7 @@ import { Fraunces, Sora } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 import AppShell from "./ui/AppShell";
+import { LanguageProvider } from "./ui/LanguageContext";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -29,7 +30,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${sora.variable} ${fraunces.variable} antialiased`}>
         <Providers>
-          <AppShell>{children}</AppShell>
+          <LanguageProvider>
+            <AppShell>{children}</AppShell>
+          </LanguageProvider>
         </Providers>
       </body>
     </html>

@@ -3,10 +3,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { getNotificationDetail } from "../../lib/api";
 import { useParams } from "next/navigation";
+import { useLanguage } from "../LanguageContext";
 
 export default function NotificationDetailPage() {
   const params = useParams();
   const id = params?.id as string;
+  const { t } = useLanguage();
 
   const detailQuery = useQuery({
     queryKey: ["notification-detail", id],
@@ -16,13 +18,13 @@ export default function NotificationDetailPage() {
 
   if (detailQuery.isLoading) {
     return (
-      <div className="px-6 py-10 text-sm text-muted">Loading notification...</div>
+      <div className="px-6 py-10 text-sm text-muted">{t("common.loading")}</div>
     );
   }
 
   if (!detailQuery.data) {
     return (
-      <div className="px-6 py-10 text-sm text-muted">Notification not found.</div>
+      <div className="px-6 py-10 text-sm text-muted">{t("notifications.notFound")}</div>
     );
   }
 
@@ -33,7 +35,7 @@ export default function NotificationDetailPage() {
       <div className="mx-auto max-w-4xl space-y-6">
         <header className="rounded-[28px] border border-border bg-card p-6">
           <p className="text-xs uppercase tracking-[0.3em] text-muted">
-            Notification
+            {t("notifications.detailTitle")}
           </p>
           <h1 className="mt-3 font-display text-3xl">{item.title}</h1>
           {item.subtitle ? (
@@ -42,7 +44,7 @@ export default function NotificationDetailPage() {
         </header>
 
         <div className="rounded-3xl border border-border bg-card p-6 text-sm text-muted">
-          {item.message || "No additional details available."}
+          {item.message || t("notifications.noDetails")}
         </div>
       </div>
     </div>

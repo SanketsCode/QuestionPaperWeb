@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createCustomPaper, getSubjects } from "../../lib/api";
 import { getPapersCreatedToday, saveCustomPaper } from "../../lib/customPapers";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "../LanguageContext";
 
 const questionOptions = [10, 25, 50, 100];
 const durationOptions = [15, 30, 60, 120];
@@ -20,11 +21,15 @@ export default function CreateTestPage() {
     useState<(typeof difficultyOptions)[number]>("EASY");
   const [error, setError] = useState("");
   const [limitReached, setLimitReached] = useState(false);
+  const { t } = useLanguage();
 
-  const user = useMemo(() => {
-    if (typeof window === "undefined") return null;
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
     const raw = localStorage.getItem("qp_user");
-    return raw ? JSON.parse(raw) : null;
+    if (raw) {
+      setUser(JSON.parse(raw));
+    }
   }, []);
 
   const isFreeUser = !user?.planName || user?.planName?.toLowerCase() === "free";
@@ -50,7 +55,7 @@ export default function CreateTestPage() {
       if (err?.response?.status === 403) {
         setLimitReached(true);
       } else {
-        setError("Failed to create custom test.");
+        setError(t("common.error"));
       }
     },
   });
@@ -59,7 +64,7 @@ export default function CreateTestPage() {
     setError("");
     setLimitReached(false);
     if (!subject) {
-      setError("Select a subject.");
+      setError(t("createTest.selectSubject") || "Select a subject.");
       return;
     }
     if (isFreeUser) {
@@ -84,16 +89,16 @@ export default function CreateTestPage() {
       <div className="mx-auto max-w-4xl space-y-8">
         <header className="rounded-[28px] border border-border bg-card p-6">
           <p className="text-xs uppercase tracking-[0.3em] text-muted">
-            Create test
+            {t("createTest.title")}
           </p>
           <h1 className="mt-3 font-display text-3xl">
-            Build a custom practice set
+            {t("createTest.subtitle")}
           </h1>
         </header>
 
         <div className="rounded-3xl border border-border bg-card p-6 space-y-6">
           <div>
-            <label className="text-sm font-semibold">Title (optional)</label>
+            <label className="text-sm font-semibold">{t("createTest.titleInput") || "Title (optional)"}</label>
             <input
               value={title}
               onChange={event => setTitle(event.target.value)}
@@ -103,10 +108,10 @@ export default function CreateTestPage() {
           </div>
 
           <div>
-            <label className="text-sm font-semibold">Subject</label>
+            <label className="text-sm font-semibold">{t("createTest.subject")}</label>
             {subjectsQuery.isLoading ? (
               <div className="mt-2 text-sm text-muted">
-                Loading subjects...
+                {t("common.loading")}
               </div>
             ) : (
               <select
@@ -125,7 +130,7 @@ export default function CreateTestPage() {
 
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <label className="text-sm font-semibold">Questions</label>
+              <label className="text-sm font-semibold">{t("createTest.questions")}</label>
               <select
                 value={questionCount}
                 onChange={event => setQuestionCount(Number(event.target.value))}
@@ -134,14 +139,14 @@ export default function CreateTestPage() {
                 {(isFreeUser ? questionOptions.slice(0, 2) : questionOptions).map(
                   count => (
                     <option key={count} value={count}>
-                      {count} questions
+                      {count} {t("paper.questions")}
                     </option>
                   )
                 )}
               </select>
             </div>
             <div>
-              <label className="text-sm font-semibold">Duration</label>
+              <label className="text-sm font-semibold">{t("createTest.duration")}</label>
               <select
                 value={duration}
                 onChange={event => setDuration(Number(event.target.value))}
@@ -149,7 +154,7 @@ export default function CreateTestPage() {
               >
                 {durationOptions.map(minutes => (
                   <option key={minutes} value={minutes}>
-                    {minutes} minutes
+                    {minutes} {t("paper.mins")}
                   </option>
                 ))}
               </select>
@@ -157,7 +162,7 @@ export default function CreateTestPage() {
           </div>
 
           <div>
-            <label className="text-sm font-semibold">Difficulty</label>
+            <label className="text-sm font-semibold">{t("createTest.difficulty")}</label>
             <div className="mt-2 flex flex-wrap gap-2">
               {difficultyOptions.map(level => (
                 <button
@@ -183,9 +188,9 @@ export default function CreateTestPage() {
 
           {limitReached ? (
             <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
-              You’ve reached today’s free limit. Upgrade your plan to create more.
+              {t("createTest.limitReached")}
               <a className="ml-2 font-semibold" href="/subscription">
-                Upgrade
+                {t("paper.upgrade")}
               </a>
             </div>
           ) : null}
@@ -195,7 +200,7 @@ export default function CreateTestPage() {
             disabled={createMutation.isPending}
             className="w-full rounded-full bg-brand px-5 py-3 text-sm font-semibold text-white disabled:opacity-70"
           >
-            {createMutation.isPending ? "Creating..." : "Create test"}
+            {createMutation.isPending ? t("createTest.creating") : t("createTest.create")}
           </button>
         </div>
       </div>

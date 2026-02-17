@@ -9,19 +9,20 @@ import {
   getMyCompetitionSubmissions,
   getMyPaperSubmissions,
 } from "../../lib/api";
+import { useLanguage } from "../LanguageContext";
 
 type TabId = "papers" | "competitions";
 
-const paperTypeLabel = (paperType: PaperType) => {
+const paperTypeLabel = (paperType: PaperType, t: any) => {
   switch (paperType) {
     case "REAL_EXAM":
-      return "Previous paper";
+      return t("results.paperTypes.REAL_EXAM");
     case "LATEST_PAPER":
-      return "Latest paper";
+      return t("results.paperTypes.LATEST_PAPER");
     case "CUSTOM_PAPER":
-      return "Custom test";
+      return t("results.paperTypes.CUSTOM_PAPER");
     default:
-      return "Test";
+      return t("results.paperTypes.TEST");
   }
 };
 
@@ -37,6 +38,7 @@ function formatDateTime(dateTime?: string) {
 }
 
 export default function ResultsPage() {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<TabId>("papers");
   const papersQuery = useQuery({
     queryKey: ["my-paper-submissions"],
@@ -59,7 +61,7 @@ export default function ResultsPage() {
 
   const renderPaperItem = (item: PaperSubmissionItem) => {
     const title = item.paper?.title || "Test";
-    const subtitle = paperTypeLabel(item.paperType);
+    const subtitle = paperTypeLabel(item.paperType, t);
     const scoreText = `${item.score} / ${item.totalMarks}`;
     const dateText = formatDateTime(item.createdAt);
     const href =
@@ -86,8 +88,8 @@ export default function ResultsPage() {
           </div>
         </div>
         <div className="mt-3 text-xs text-muted">
-          {item.correctCount} correct · {item.wrongCount} wrong ·{" "}
-          {item.totalQuestions} questions
+          {item.correctCount} {t("results.correct")} · {item.wrongCount} {t("results.wrong")} ·{" "}
+          {item.totalQuestions} {t("paper.questions")}
         </div>
       </a>
     );
@@ -128,11 +130,11 @@ export default function ResultsPage() {
         </div>
         {item.status === "submitted" ? (
           <div className="mt-3 text-xs text-muted">
-            {item.correctCount} correct · {item.wrongCount} wrong ·{" "}
-            {Math.round((item.timeTaken || 0) / 60)} mins
+            {item.correctCount} {t("results.correct")} · {item.wrongCount} {t("results.wrong")} ·{" "}
+            {Math.round((item.timeTaken || 0) / 60)} {t("paper.mins")}
           </div>
         ) : (
-          <div className="mt-3 text-xs text-muted">Attempt started</div>
+          <div className="mt-3 text-xs text-muted">{t("results.attemptStarted")}</div>
         )}
       </a>
     );
@@ -143,10 +145,10 @@ export default function ResultsPage() {
       <div className="mx-auto max-w-5xl space-y-8">
         <header className="rounded-[28px] border border-border bg-card p-6">
           <p className="text-xs uppercase tracking-[0.3em] text-muted">
-            Results
+            {t("results.title")}
           </p>
           <h1 className="mt-3 font-display text-3xl">
-            Track your recent submissions
+            {t("results.subtitle")}
           </h1>
         </header>
 
@@ -161,14 +163,14 @@ export default function ResultsPage() {
                   : "text-muted hover:text-foreground"
               }`}
             >
-              {tab === "papers" ? "Papers" : "Competitions"}
+              {tab === "papers" ? t("results.tabs.papers") : t("results.tabs.competitions")}
             </button>
           ))}
         </div>
 
         {isLoading ? (
           <div className="rounded-3xl border border-border bg-card p-6 text-sm text-muted">
-            Loading results...
+            {t("common.loading")}
           </div>
         ) : isError ? (
           <div className="rounded-3xl border border-red-200 bg-red-50 p-6 text-sm text-red-700">
@@ -176,7 +178,7 @@ export default function ResultsPage() {
           </div>
         ) : data.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-border bg-card p-10 text-center text-sm text-muted">
-            No results yet.
+            {t("results.noResults")}
           </div>
         ) : (
           <div className="grid gap-4">

@@ -3,11 +3,13 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteCustomPaper, getCustomPaperById } from "../../lib/customPapers";
 import { useParams, useRouter } from "next/navigation";
+import { useLanguage } from "../LanguageContext";
 
 export default function CustomPaperDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const id = params?.id as string;
+  const { t } = useLanguage();
 
   const paperQuery = useQuery({
     queryKey: ["custom-paper", id],
@@ -25,7 +27,7 @@ export default function CustomPaperDetailsPage() {
   if (paperQuery.isLoading) {
     return (
       <div className="px-6 py-10 text-sm text-muted">
-        Loading custom paper...
+        {t("customPaper.loading")}
       </div>
     );
   }
@@ -33,7 +35,7 @@ export default function CustomPaperDetailsPage() {
   const paper = paperQuery.data;
   if (!paper) {
     return (
-      <div className="px-6 py-10 text-sm text-muted">Paper not found.</div>
+      <div className="px-6 py-10 text-sm text-muted">{t("customPaper.notFound")}</div>
     );
   }
 
@@ -42,7 +44,7 @@ export default function CustomPaperDetailsPage() {
       <div className="mx-auto max-w-4xl space-y-8">
         <header className="rounded-[28px] border border-border bg-card p-6">
           <p className="text-xs uppercase tracking-[0.3em] text-muted">
-            Custom paper
+            {t("customPaper.title")}
           </p>
           <h1 className="mt-3 font-display text-3xl">{paper.title}</h1>
           <p className="mt-2 text-sm text-muted">{paper.subject}</p>
@@ -51,7 +53,7 @@ export default function CustomPaperDetailsPage() {
         <div className="grid gap-4 md:grid-cols-2">
           <div className="rounded-3xl border border-border bg-card p-6">
             <div className="text-xs uppercase tracking-[0.2em] text-muted">
-              Questions
+              {t("createTest.questions")}
             </div>
             <div className="mt-2 text-2xl font-semibold">
               {paper.questionCount}
@@ -59,15 +61,15 @@ export default function CustomPaperDetailsPage() {
           </div>
           <div className="rounded-3xl border border-border bg-card p-6">
             <div className="text-xs uppercase tracking-[0.2em] text-muted">
-              Duration
+              {t("createTest.duration")}
             </div>
             <div className="mt-2 text-2xl font-semibold">
-              {paper.duration} mins
+              {paper.duration} {t("paper.mins")}
             </div>
           </div>
           <div className="rounded-3xl border border-border bg-card p-6">
             <div className="text-xs uppercase tracking-[0.2em] text-muted">
-              Difficulty
+              {t("createTest.difficulty")}
             </div>
             <div className="mt-2 text-2xl font-semibold">
               {paper.difficulty}
@@ -80,13 +82,13 @@ export default function CustomPaperDetailsPage() {
             href={`/question-paper/${paper._id}?custom=1`}
             className="rounded-full bg-brand px-5 py-2 text-sm font-semibold text-white"
           >
-            Start test
+            {t("paper.startTest")}
           </a>
           <button
             className="rounded-full border border-rose-200 bg-rose-50 px-5 py-2 text-sm font-semibold text-rose-700"
             onClick={() => deleteMutation.mutate(paper._id)}
           >
-            Delete
+            {t("customPaper.delete")}
           </button>
         </div>
       </div>

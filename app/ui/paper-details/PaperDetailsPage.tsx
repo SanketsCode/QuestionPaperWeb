@@ -1,13 +1,13 @@
-"use client";
-
 import { useQuery } from "@tanstack/react-query";
 import { getPaperFullDetails } from "../../lib/api";
 import { useParams, useRouter } from "next/navigation";
+import { useLanguage } from "../LanguageContext";
 
 export default function PaperDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const id = params?.id as string;
+  const { t } = useLanguage();
 
   const paperQuery = useQuery({
     queryKey: ["paper-details", id],
@@ -17,7 +17,7 @@ export default function PaperDetailsPage() {
 
   if (paperQuery.isLoading) {
     return (
-      <div className="px-6 py-10 text-sm text-muted">Loading paper...</div>
+      <div className="px-6 py-10 text-sm text-muted">{t("common.loading")}</div>
     );
   }
 
@@ -28,13 +28,13 @@ export default function PaperDetailsPage() {
       <div className="px-6 py-10 text-sm text-muted">
         {errorStatus === 403 ? (
           <>
-            Access to this paper is restricted.{" "}
+            {t("paper.restricted")}{" "}
             <a className="text-brand" href="/subscription">
-              Upgrade your plan
+              {t("paper.upgrade")}
             </a>
           </>
         ) : (
-          "Paper not found."
+          t("paper.notFound")
         )}
       </div>
     );
@@ -45,39 +45,35 @@ export default function PaperDetailsPage() {
         .split("\n")
         .map(item => item.trim().replace(/^[•\-\d]+\.?\s*/, ""))
         .filter(Boolean)
-    : [
-        "No calculators allowed.",
-        "Each correct answer earns marks, wrong answers may have negative marks.",
-        "Exam auto-submits when time ends.",
-      ];
+    : (t("paper.defaultInstructions") as string[]);
 
   return (
     <div className="px-6 py-10 md:px-10">
       <div className="mx-auto max-w-5xl space-y-8">
         <header className="rounded-[28px] border border-border bg-card p-6">
           <p className="text-xs uppercase tracking-[0.3em] text-muted">
-            Instructions
+            {t("paper.instructionTitle")}
           </p>
           <h1 className="mt-3 font-display text-3xl">
             {paper.exam_name}
           </h1>
           <p className="mt-2 text-sm text-muted">
-            Prepare for the exam with clear instructions.
+            {t("paper.subtitle")}
           </p>
         </header>
 
         <div className="grid gap-4 md:grid-cols-2">
           <div className="rounded-3xl border border-border bg-card p-6">
             <div className="text-xs uppercase tracking-[0.2em] text-muted">
-              Duration
+              {t("paper.duration")}
             </div>
             <div className="mt-2 text-2xl font-semibold">
-              {paper.exam_due_min} mins
+              {paper.exam_due_min} {t("paper.mins")}
             </div>
           </div>
           <div className="rounded-3xl border border-border bg-card p-6">
             <div className="text-xs uppercase tracking-[0.2em] text-muted">
-              Questions
+              {t("paper.questions")}
             </div>
             <div className="mt-2 text-2xl font-semibold">
               {paper.total_que_count}
@@ -85,7 +81,7 @@ export default function PaperDetailsPage() {
           </div>
           <div className="rounded-3xl border border-border bg-card p-6">
             <div className="text-xs uppercase tracking-[0.2em] text-muted">
-              Total marks
+              {t("paper.totalMarks")}
             </div>
             <div className="mt-2 text-2xl font-semibold">
               {paper.total_marks}
@@ -93,7 +89,7 @@ export default function PaperDetailsPage() {
           </div>
           <div className="rounded-3xl border border-border bg-card p-6">
             <div className="text-xs uppercase tracking-[0.2em] text-muted">
-              Negative marking
+              {t("paper.negativeMarking")}
             </div>
             <div className="mt-2 text-2xl font-semibold">
               {paper.has_negative_marking ? "0.25" : "0"}
@@ -102,10 +98,10 @@ export default function PaperDetailsPage() {
         </div>
 
         <div className="rounded-3xl border border-border bg-card p-6">
-          <div className="text-sm font-semibold">Important instructions</div>
+          <div className="text-sm font-semibold">{t("paper.instructions")}</div>
           <ul className="mt-4 space-y-2 text-sm text-muted">
-            {instructions.map(item => (
-              <li key={item}>• {item}</li>
+            {instructions.map((item, index) => (
+              <li key={index}>• {item}</li>
             ))}
           </ul>
         </div>
@@ -115,13 +111,13 @@ export default function PaperDetailsPage() {
             className="rounded-full border border-border px-5 py-2 text-sm font-semibold"
             onClick={() => router.back()}
           >
-            Back
+            {t("paper.back")}
           </button>
           <a
             href={`/question-paper/${paper._id}`}
             className="rounded-full bg-brand px-5 py-2 text-sm font-semibold text-white"
           >
-            Start test
+            {t("paper.startTest")}
           </a>
         </div>
       </div>

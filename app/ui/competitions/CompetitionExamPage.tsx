@@ -8,6 +8,8 @@ import {
   startCompetitionExam,
 } from "../../lib/api";
 import { useParams, useRouter } from "next/navigation";
+import MathRenderer from "../components/MathRenderer";
+import { useLanguage } from "../LanguageContext";
 
 type ResolvedContent = { text: string; image?: string };
 
@@ -41,6 +43,7 @@ export default function CompetitionExamPage() {
   const [paletteOpen, setPaletteOpen] = useState(false);
   const serverOffsetRef = useRef(0);
   const hasSubmittedRef = useRef(false);
+  const { language: globalLanguage } = useLanguage();
 
   const startMutation = useMutation({
     mutationFn: startCompetitionExam,
@@ -49,8 +52,12 @@ export default function CompetitionExamPage() {
       setQuestions(data.questions || []);
       serverOffsetRef.current = Date.parse(data.serverNow) - Date.now();
       setTimeLeft(data.timeLeftSeconds);
-      const lang = data.competition?.languagesAvailable?.[0] || "en";
-      setSelectedLanguage(lang);
+      
+      const available = data.competition?.languagesAvailable || ["en"];
+      const prefer = globalLanguage;
+      const selected = available.includes(prefer) ? prefer : available[0];
+      
+      setSelectedLanguage(selected);
     },
   });
 
@@ -195,7 +202,9 @@ export default function CompetitionExamPage() {
           <div className="text-sm font-semibold">
             Question {currentQuestionIndex + 1}
           </div>
-          <div className="mt-4 text-sm">{questionContent.text}</div>
+          <div className="mt-4 text-sm">
+            <MathRenderer text={questionContent.text} />
+          </div>
           <div className="mt-6 grid gap-3">
             {options.map((option: ResolvedContent, index: number) => {
               const isSelected = answers[currentQuestion._id] === index;
@@ -211,7 +220,7 @@ export default function CompetitionExamPage() {
                       : "border-border bg-white"
                   }`}
                 >
-                  {option.text || "Option"}
+                  <MathRenderer text={option.text || "Option"} />
                 </button>
               );
             })}
@@ -253,34 +262,36 @@ export default function CompetitionExamPage() {
       </div>
 
       {paletteOpen ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-6">
-          <div className="w-full max-w-lg rounded-3xl border border-border bg-white p-6">
-            <div className="flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-6 backdrop-blur-sm">
+          <div className="flex max-h-[80vh] w-full max-w-lg flex-col rounded-3xl border border-border bg-white p-6 shadow-2xl">
+            <div className="flex items-center justify-between pb-4 border-b border-border mb-4">
               <div className="text-sm font-semibold">Question palette</div>
               <button
-                className="text-xs font-semibold text-muted"
+                className="text-xs font-semibold text-muted hover:text-foreground"
                 onClick={() => setPaletteOpen(false)}
               >
                 Close
               </button>
             </div>
-            <div className="mt-4 grid grid-cols-6 gap-2 text-xs">
-              {questionStatus.map(item => (
-                <button
-                  key={item.index}
-                  onClick={() => {
-                    setCurrentQuestionIndex(item.index);
-                    setPaletteOpen(false);
-                  }}
-                  className={`rounded-lg border px-2 py-2 ${
-                    item.answered
-                      ? "border-brand bg-brand/10 text-brand"
-                      : "border-border bg-white text-muted"
-                  }`}
-                >
-                  {item.index + 1}
-                </button>
-              ))}
+            <div className="flex-1 overflow-y-auto pr-1 custom-scrollbar">
+              <div className="grid grid-cols-5 sm:grid-cols-6 gap-2 text-xs">
+                {questionStatus.map(item => (
+                  <button
+                    key={item.index}
+                    onClick={() => {
+                      setCurrentQuestionIndex(item.index);
+                      setPaletteOpen(false);
+                    }}
+                    className={`rounded-lg border px-2 py-2.5 transition-colors ${
+                      item.answered
+                        ? "border-brand bg-brand/10 text-brand"
+                        : "border-border bg-white text-muted hover:bg-slate-50"
+                    }`}
+                  >
+                    {item.index + 1}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>

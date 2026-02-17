@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useLanguage } from "./LanguageContext";
 
 const primaryNavItems = [
   { href: "/home", label: "Home" },
@@ -38,6 +39,7 @@ export default function AppShell({
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
+  const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => {
     const publicRoutes = ["/", "/login", "/verify-otp"];
@@ -76,7 +78,10 @@ export default function AppShell({
                   pathname.startsWith(item.href) ? "text-foreground" : ""
                 }`}
               >
-                {item.label}
+                {item.label === "Home" ? t("nav.home") :
+                 item.label === "Papers" ? t("nav.papers") :
+                 item.label === "Tests" ? t("nav.tests") :
+                 item.label === "Competitions" ? t("nav.competitions") : item.label}
               </Link>
             ))}
             <div className="relative">
@@ -88,7 +93,7 @@ export default function AppShell({
                     : ""
                 }`}
               >
-                More
+                {t("nav.more")}
                 <svg
                   width="10"
                   height="6"
@@ -124,7 +129,10 @@ export default function AppShell({
                           : ""
                       }`}
                     >
-                      {item.label}
+                      {item.label === "Results" ? t("nav.results") :
+                       item.label === "My Academy" ? t("nav.academy") :
+                       item.label === "Subscription" ? t("nav.subscription") :
+                       item.label === "Profile" ? t("nav.profile") : item.label}
                     </Link>
                   ))}
                 </div>
@@ -136,14 +144,23 @@ export default function AppShell({
               href="/notifications"
               className="hidden rounded-full border border-border px-4 py-2 text-sm font-semibold md:inline-flex"
             >
-              Notifications
+              {t("nav.notifications")}
             </Link>
             <Link
               href="/create-test"
               className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white"
             >
-              Create Test
+              {t("nav.createTest")}
             </Link>
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value as any)}
+              className="rounded-full border border-border bg-white px-3 py-2 text-xs font-semibold focus:outline-none"
+            >
+              <option value="en">EN</option>
+              <option value="hi">HI</option>
+              <option value="mr">MR</option>
+            </select>
             <button
               className="inline-flex items-center justify-center rounded-full border border-border p-2 lg:hidden"
               onClick={() => setMenuOpen(prev => !prev)}
@@ -167,7 +184,14 @@ export default function AppShell({
                       : ""
                   }`}
                 >
-                  {item.label}
+                  {item.label === "Home" ? t("nav.home") :
+                   item.label === "Papers" ? t("nav.papers") :
+                   item.label === "Tests" ? t("nav.tests") :
+                   item.label === "Competitions" ? t("nav.competitions") :
+                   item.label === "Results" ? t("nav.results") :
+                   item.label === "My Academy" ? t("nav.academy") :
+                   item.label === "Subscription" ? t("nav.subscription") :
+                   item.label === "Profile" ? t("nav.profile") : item.label}
                 </Link>
               ))}
               <hr className="border-border" />
@@ -176,7 +200,7 @@ export default function AppShell({
                 onClick={() => setMenuOpen(false)}
                 className="py-2 text-muted hover:text-foreground"
               >
-                Notifications
+                {t("nav.notifications")}
               </Link>
             </div>
           </div>
@@ -187,11 +211,11 @@ export default function AppShell({
 
       <footer className="border-t border-border bg-white/70">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-8 text-xs text-muted md:flex-row md:items-center md:justify-between md:px-10">
-          <div>QuestionPaper © 2026. All rights reserved.</div>
+          <div>{t("nav.copyright")}</div>
           <div className="flex flex-wrap gap-6">
-            <Link href="/subscription">Plans</Link>
-            <Link href="/notifications">Notifications</Link>
-            <Link href="/profile">Profile</Link>
+            <Link href="/subscription">{t("nav.plans")}</Link>
+            <Link href="/notifications">{t("nav.notifications")}</Link>
+            <Link href="/profile">{t("nav.profile")}</Link>
           </div>
         </div>
       </footer>

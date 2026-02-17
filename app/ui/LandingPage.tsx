@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
+import { useLanguage } from "./LanguageContext";
 import {
   Competition,
   ExamCategory,
@@ -140,6 +141,8 @@ export default function LandingPage() {
     queryFn: getExamCategories,
   });
 
+  const { t } = useLanguage();
+
   const subjectsQuery = useQuery({
     queryKey: ["subjects"],
     queryFn: getSubjects,
@@ -215,10 +218,10 @@ export default function LandingPage() {
           </div>
           <div className="hidden items-center gap-6 text-muted md:flex">
             <a className="hover:text-foreground" href="#features">
-              Features
+              {t("nav.features") || "Features"}
             </a>
             <a className="hover:text-foreground" href="#live">
-              Live Data
+              {t("nav.liveData") || "Live Data"}
             </a>
           </div>
           <div className="flex items-center gap-3">
@@ -226,13 +229,13 @@ export default function LandingPage() {
               className="hidden rounded-full border border-border px-4 py-2 text-sm md:inline-flex"
               href="/login"
             >
-              Log in
+              {t("nav.login")}
             </Link>
             <Link
               className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white shadow-[0_14px_40px_rgba(15,118,110,0.35)]"
               href="/login"
             >
-              Get started
+              {t("nav.getStarted") || "Get started"}
             </Link>
           </div>
         </nav>
@@ -241,34 +244,33 @@ export default function LandingPage() {
           <div className="flex flex-col gap-8">
             <div className="inline-flex w-fit items-center gap-3 rounded-full border border-border bg-card px-4 py-2 text-xs uppercase tracking-[0.3em] text-muted">
               <span className="h-2 w-2 rounded-full bg-accent" />
-              Practice smarter
+              {t("landing.hero.badge")}
             </div>
             <h1 className="font-display text-4xl leading-tight md:text-6xl">
-              Ace your exams with data-driven practice and competitions.
+              {t("landing.hero.title")}
             </h1>
             <p className="max-w-xl text-lg text-muted">
-              QuestionPaper brings together real exam papers, custom tests,
-              analytics, and live competitions in one clean experience.
+              {t("landing.hero.subtitle")}
             </p>
             <div className="flex flex-wrap gap-4">
               <a
                 className="rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white shadow-[0_18px_45px_rgba(15,118,110,0.35)]"
                 href="/home"
               >
-                Start practicing
+                {t("landing.hero.start")}
               </a>
               <a
                 className="rounded-full border border-border px-6 py-3 text-sm font-semibold"
                 href="#live"
               >
-                Explore competitions
+                {t("landing.hero.explore")}
               </a>
             </div>
             <div className="flex flex-wrap gap-3">
-              <StatPill label="Categories" value={stats.categories} />
-              <StatPill label="Subjects" value={stats.subjects} />
-              <StatPill label="Competitions" value={stats.competitions} />
-              <StatPill label="Papers" value={stats.papers} />
+              <StatPill label={t("landing.stats.categories")} value={stats.categories} />
+              <StatPill label={t("landing.stats.subjects")} value={stats.subjects} />
+              <StatPill label={t("landing.stats.competitions")} value={stats.competitions} />
+              <StatPill label={t("landing.stats.papers")} value={stats.papers} />
             </div>
           </div>
           <div className="rounded-[32px] border border-border bg-card p-8 shadow-[0_30px_60px_rgba(15,118,110,0.12)]">
@@ -326,26 +328,29 @@ export default function LandingPage() {
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-muted">
-                Feature set
+                {t("landing.features.badge")}
               </p>
               <h2 className="mt-3 font-display text-3xl md:text-4xl">
-                Everything you need to prepare with confidence.
+                {t("landing.features.title")}
               </h2>
             </div>
             <p className="max-w-xl text-sm text-muted">
-              Designed from the mobile experience and rebuilt for desktop,
-              tablet, and mobile web — fast, responsive, and consistent with the
-              same API backbone.
+              {t("landing.features.description")}
             </p>
           </div>
           <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {features.map(feature => (
+            {[
+              "smartPractice",
+              "competitions",
+              "insights",
+              "academy",
+            ].map((key) => (
               <div
-                key={feature.title}
+                key={key}
                 className="rounded-3xl border border-border bg-card p-6"
               >
-                <h3 className="text-lg font-semibold">{feature.title}</h3>
-                <p className="mt-3 text-sm text-muted">{feature.description}</p>
+                <h3 className="text-lg font-semibold">{t(`landing.features.${key}.title`)}</h3>
+                <p className="mt-3 text-sm text-muted">{t(`landing.features.${key}.desc`)}</p>
               </div>
             ))}
           </div>
@@ -357,52 +362,52 @@ export default function LandingPage() {
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-muted">
-                Live from your API
+                {t("landing.live.badge")}
               </p>
               <h2 className="mt-3 font-display text-3xl md:text-4xl">
-                Real data, streaming into the landing page.
+                {t("landing.live.title")}
               </h2>
             </div>
             <div className="text-sm text-muted">
-              Powered by React Query for caching and fast refresh.
+              {t("landing.live.notes")}
             </div>
           </div>
 
           <div className="mt-10 grid gap-6 md:grid-cols-2">
             <DataCard
-              title="Exam categories"
+              title={t("landing.live.categories")}
               items={categoryItems}
               empty={
                 categoriesQuery.isLoading
-                  ? "Loading categories..."
-                  : "No categories found."
+                  ? t("common.loading")
+                  : t("landing.live.empty")
               }
             />
             <DataCard
-              title="Subjects"
+              title={t("landing.live.subjects")}
               items={subjectItems}
               empty={
                 subjectsQuery.isLoading
-                  ? "Loading subjects..."
-                  : "No subjects found."
+                  ? t("common.loading")
+                  : t("landing.live.empty")
               }
             />
             <DataCard
-              title="Competitions"
+              title={t("landing.live.competitions")}
               items={competitionItems}
               empty={
                 competitionsQuery.isLoading
-                  ? "Loading competitions..."
-                  : "No competitions found."
+                  ? t("common.loading")
+                  : t("landing.live.empty")
               }
             />
             <DataCard
-              title="Question papers"
+              title={t("landing.live.papers")}
               items={paperItems}
               empty={
                 papersQuery.isLoading
-                  ? "Loading papers..."
-                  : "No papers found."
+                  ? t("common.loading")
+                  : t("landing.live.empty")
               }
             />
           </div>
@@ -414,15 +419,15 @@ export default function LandingPage() {
           <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr]">
             <div className="rounded-3xl border border-border bg-card p-8">
               <p className="text-xs uppercase tracking-[0.3em] text-muted">
-                Quick flow
+                {t("landing.flow.badge")}
               </p>
               <h2 className="mt-4 font-display text-3xl">
-                A simple rhythm that keeps you progressing.
+                {t("landing.flow.title")}
               </h2>
               <div className="mt-6 flex flex-col gap-4">
-                {steps.map((step, index) => (
+                {t("landing.flow.steps").map((step: any, index: number) => (
                   <div
-                    key={step.title}
+                    key={index}
                     className="flex gap-4 rounded-2xl border border-border bg-white/80 p-4"
                   >
                     <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand text-sm font-semibold text-white">
@@ -431,7 +436,7 @@ export default function LandingPage() {
                     <div>
                       <div className="text-sm font-semibold">{step.title}</div>
                       <div className="text-xs text-muted">
-                        {step.description}
+                        {step.desc}
                       </div>
                     </div>
                   </div>
@@ -440,28 +445,23 @@ export default function LandingPage() {
             </div>
             <div className="flex flex-col justify-center rounded-3xl border border-border bg-gradient-to-br from-brand/10 via-white/80 to-accent/20 p-8">
               <p className="text-xs uppercase tracking-[0.3em] text-muted">
-                Designed for every screen
+                {t("landing.flow.responsive.badge")}
               </p>
               <h3 className="mt-4 font-display text-3xl">
-                Responsive experiences for desktop, tablet, and mobile.
+                {t("landing.flow.responsive.title")}
               </h3>
               <p className="mt-4 text-sm text-muted">
-                Layouts, typography, and components scale smoothly so learners
-                can practice anywhere without losing focus.
+                {t("landing.flow.responsive.desc")}
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <div className="rounded-full border border-border bg-card px-4 py-2 text-xs">
-                  Desktop-first clarity
-                </div>
-                <div className="rounded-full border border-border bg-card px-4 py-2 text-xs">
-                  Tablet-ready panels
-                </div>
-                <div className="rounded-full border border-border bg-card px-4 py-2 text-xs">
-                  Mobile-friendly flow
-                </div>
+                {t("landing.flow.responsive.badges").map((badge: string, index: number) => (
+                  <div key={index} className="rounded-full border border-border bg-card px-4 py-2 text-xs">
+                    {badge}
+                  </div>
+                ))}
               </div>
               <button className="mt-8 w-fit rounded-full bg-brand-dark px-6 py-3 text-sm font-semibold text-white">
-                Build your plan
+                {t("landing.flow.responsive.build")}
               </button>
             </div>
           </div>
@@ -474,32 +474,31 @@ export default function LandingPage() {
             <div className="grid gap-6 md:grid-cols-[1.2fr_0.8fr] md:items-center">
               <div>
                 <p className="text-xs uppercase tracking-[0.3em] text-white/80">
-                  Ready to start?
+                  {t("landing.cta.badge")}
                 </p>
                 <h2 className="mt-4 font-display text-3xl md:text-4xl">
-                  Bring your exam prep online with confidence.
+                  {t("landing.cta.title")}
                 </h2>
                 <p className="mt-3 text-sm text-white/80">
-                  Log in with OTP, sync across devices, and keep your progress
-                  in one place.
+                  {t("landing.cta.desc")}
                 </p>
               </div>
               <div className="flex flex-wrap gap-3 md:justify-end">
                 <button className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-brand-dark">
-                  Request a demo
+                  {t("landing.cta.demo")}
                 </button>
                 <button className="rounded-full border border-white/50 px-6 py-3 text-sm font-semibold text-white">
-                  Launch web app
+                  {t("landing.cta.launch")}
                 </button>
               </div>
             </div>
           </div>
           <footer className="mt-10 flex flex-col gap-4 text-xs text-muted md:flex-row md:items-center md:justify-between">
-            <div>QuestionPaper © 2026. All rights reserved.</div>
+            <div>{t("nav.copyright") || "QuestionPaper © 2026. All rights reserved."}</div>
             <div className="flex flex-wrap gap-6">
-              <span>Privacy</span>
-              <span>Terms</span>
-              <span>Support</span>
+              <span>{t("nav.privacy")}</span>
+              <span>{t("nav.terms")}</span>
+              <span>{t("nav.support")}</span>
             </div>
           </footer>
         </div>

@@ -2,9 +2,14 @@
 
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Competition, getCompetitions } from "../../lib/api";
+import {
+  Competition,
+  getCompetitions,
+  getMyCompetitionSubmissions,
+} from "../../lib/api";
+import { useLanguage } from "../LanguageContext";
 
-type Tab = "live" | "upcoming" | "completed";
+type Tab = "live" | "upcoming" | "completed" | "my_submissions";
 
 const statusStyle: Record<string, string> = {
   live: "bg-emerald-50 text-emerald-700 border-emerald-200",
@@ -12,11 +17,7 @@ const statusStyle: Record<string, string> = {
   completed: "bg-slate-100 text-slate-700 border-slate-200",
 };
 
-const statusLabel: Record<Tab, string> = {
-  live: "Live",
-  upcoming: "Upcoming",
-  completed: "Completed",
-};
+
 
 function formatDateTime(dateTime?: string) {
   if (!dateTime) return "—";
@@ -37,10 +38,17 @@ function getStatus(competition: Competition): Tab {
 }
 
 export default function CompetitionsPage() {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<Tab>("live");
   const competitionsQuery = useQuery({
     queryKey: ["competitions"],
     queryFn: getCompetitions,
+  });
+
+  const submissionsQuery = useQuery({
+    queryKey: ["my-competition-submissions"],
+    queryFn: getMyCompetitionSubmissions,
+    enabled: activeTab === "my_submissions",
   });
 
   const filtered = useMemo(() => {
@@ -53,7 +61,7 @@ export default function CompetitionsPage() {
       <div className="mx-auto max-w-6xl space-y-8">
         <header className="rounded-[28px] border border-border bg-card p-6">
           <p className="text-xs uppercase tracking-[0.3em] text-muted">
-            Competitions
+            {t("competitions.title")}
           </p>
           <h1 className="mt-3 font-display text-3xl">
             Challenge yourself in live exams
@@ -64,29 +72,103 @@ export default function CompetitionsPage() {
         </header>
 
         <div className="flex flex-wrap gap-2 rounded-full border border-border bg-white/70 p-2">
-          {(["live", "upcoming", "completed"] as Tab[]).map(tab => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`rounded-full px-4 py-2 text-sm font-semibold ${
-                activeTab === tab
-                  ? "bg-brand text-white"
-                  : "text-muted hover:text-foreground"
-              }`}
-            >
-              {statusLabel[tab]}
-            </button>
-          ))}
+          {(["live", "upcoming", "completed", "my_submissions"] as Tab[]).map(
+            tab => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`rounded-full px-4 py-2 text-sm font-semibold ${
+                  activeTab === tab
+                    ? "bg-brand text-white"
+                    : "text-muted hover:text-foreground"
+                }`}
+              >
+                {tab === "my_submissions" ? t("competitions.mySubmissions") : t(`competitions.${tab}`)}
+              </button>
+            )
+          )}
         </div>
 
-        {competitionsQuery.isLoading ? (
+        {activeTab === "my_submissions" ? (
+          submissionsQuery.isLoading ? (
+            <div className="rounded-3xl border border-border bg-card p-6 text-sm text-muted">
+              Loading submissions...
+            </div>
+          ) : !submissionsQuery.data?.length ? (
+            <div className="rounded-3xl border border-dashed border-border bg-card p-10 text-center">
+              <div className="text-lg font-semibold">No submissions yet</div>
+              <p className="mt-2 text-sm text-muted">
+                Participate in a competition to see it here.
+              </p>
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2">
+              {(submissionsQuery.data || []).map(submission => (
+                <div
+                  key={submission._id}
+                  className="rounded-3xl border border-border bg-card p-6 shadow-sm"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <div className="text-sm font-semibold">
+                        {submission.competition?.title || "Competition"}
+                      </div>
+                      <div className="mt-1 text-xs text-muted">
+                        Submitted on {formatDateTime(submission.submittedAt)}
+                      </div>
+                    </div>
+                    <span
+                      className={`rounded-full border px-3 py-1 text-[10px] font-semibold uppercase ${
+                        submission.status === "submitted"
+                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                          : "bg-amber-50 text-amber-700 border-amber-200"
+                      }`}
+                    >
+                      {submission.status}
+                    </span>
+                  </div>
+
+                  <div className="mt-4 flex gap-4 text-xs">
+                    <div>
+                      <span className="font-semibold text-foreground">
+                        {submission.score}
+                      </span>{" "}
+                      <span className="text-muted">{t("results.score")}</span>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-foreground">
+                        {submission.correctCount}
+                      </span>{" "}
+                      <span className="text-muted">{t("results.correct")}</span>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-foreground">
+                        {submission.wrongCount}
+                      </span>{" "}
+                      <span className="text-muted">{t("results.wrong")}</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 flex items-center justify-between">
+                    <a
+                      className="text-sm font-semibold text-brand"
+                      href={`/competitions/${submission.competitionId}/leaderboard`}
+                    >
+                      {t("competitions.leaderboard")}
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )
+        ) : competitionsQuery.isLoading ? (
           <div className="rounded-3xl border border-border bg-card p-6 text-sm text-muted">
             Loading competitions...
           </div>
         ) : filtered.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-border bg-card p-10 text-center">
             <div className="text-lg font-semibold">
-              No {statusLabel[activeTab].toLowerCase()} competitions
+              {t("competitions.noCompetitions")}
             </div>
             <p className="mt-2 text-sm text-muted">
               Check back later for new challenges.
@@ -115,7 +197,7 @@ export default function CompetitionsPage() {
                       statusStyle[getStatus(item)]
                     }`}
                   >
-                    {statusLabel[getStatus(item)]}
+                    {t(`competitions.${getStatus(item)}`)}
                   </span>
                 </div>
 
@@ -141,14 +223,14 @@ export default function CompetitionsPage() {
                     className="text-sm font-semibold text-brand"
                     href={`/competitions/${item._id}`}
                   >
-                    View details
+                    {t("common.view")}
                   </a>
                   {getStatus(item) === "live" ? (
                     <a
                       className="rounded-full bg-brand px-4 py-2 text-xs font-semibold text-white"
                       href={`/competitions/${item._id}/exam`}
                     >
-                      Start now
+                      {t("competitions.start")}
                     </a>
                   ) : null}
                 </div>

@@ -10,9 +10,10 @@ import {
   getRazorpayKey,
   subscribe,
 } from "../../lib/api";
+import { useLanguage } from "../LanguageContext";
 
-function formatPrice(plan: SubscriptionPlan) {
-  if (plan.price === 0) return "Free";
+function formatPrice(plan: SubscriptionPlan, t: any) {
+  if (plan.price === 0) return t("subscription.free");
   const currency = plan.currency || "INR";
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
@@ -21,23 +22,24 @@ function formatPrice(plan: SubscriptionPlan) {
   }).format(plan.price);
 }
 
-function featureLabel(plan: SubscriptionPlan) {
+function featureLabel(plan: SubscriptionPlan, t: any) {
   const list: string[] = [];
   if (plan.features?.customPaperPerDay) {
-    list.push(`${plan.features.customPaperPerDay} custom papers/day`);
+    list.push(`${plan.features.customPaperPerDay} ${t("subscription.features.customPaperPerDay")}`);
   }
   if (plan.features?.examsPerDay) {
-    list.push(`${plan.features.examsPerDay} exams/day`);
+    list.push(`${plan.features.examsPerDay} ${t("subscription.features.examsPerDay")}`);
   }
   if (plan.features?.maxCustomPapersStorage) {
-    list.push(`${plan.features.maxCustomPapersStorage} saved papers`);
+    list.push(`${plan.features.maxCustomPapersStorage} ${t("subscription.features.maxCustomPapersStorage")}`);
   }
-  if (plan.features?.noAds) list.push("No ads");
-  if (plan.features?.multiLanguageAccess) list.push("Multi-language access");
+  if (plan.features?.noAds) list.push(t("subscription.features.noAds"));
+  if (plan.features?.multiLanguageAccess) list.push(t("subscription.features.multiLanguageAccess"));
   return list;
 }
 
 export default function SubscriptionPage() {
+  const { t } = useLanguage();
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
     null
   );
@@ -99,17 +101,17 @@ export default function SubscriptionPage() {
       <div className="mx-auto max-w-6xl space-y-8">
         <header className="rounded-[28px] border border-border bg-card p-6">
           <p className="text-xs uppercase tracking-[0.3em] text-muted">
-            Subscription
+            {t("subscription.title")}
           </p>
-          <h1 className="mt-3 font-display text-3xl">Premium plans</h1>
+          <h1 className="mt-3 font-display text-3xl">{t("subscription.premium")}</h1>
           <p className="mt-2 text-sm text-muted">
-            Unlock premium practice and higher daily limits.
+            {t("subscription.subtitle")}
           </p>
         </header>
 
         <div className="rounded-3xl border border-border bg-white/70 p-6">
           <div className="text-xs uppercase tracking-[0.3em] text-muted">
-            Category
+            {t("subscription.category")}
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
             {(categoriesQuery.data || []).map(category => (
@@ -130,7 +132,7 @@ export default function SubscriptionPage() {
 
         {subscriptionQuery.data ? (
           <div className="rounded-3xl border border-border bg-card p-6 text-sm text-muted">
-            Current subscription:{" "}
+            {t("subscription.current")}{" "}
             {subscriptionQuery.data?.global?.subscriptionId?.name ||
               subscriptionQuery.data?.global?.planName ||
               "None"}
@@ -139,11 +141,11 @@ export default function SubscriptionPage() {
 
         {plansQuery.isLoading ? (
           <div className="rounded-3xl border border-border bg-card p-6 text-sm text-muted">
-            Loading plans...
+            {t("common.loading")}
           </div>
         ) : currentPlans.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-border bg-card p-10 text-center text-sm text-muted">
-            No active plans found for this category.
+            {t("subscription.noPlans")}
           </div>
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
@@ -166,14 +168,14 @@ export default function SubscriptionPage() {
                   </div>
                 </div>
                 <div className="mt-4 text-3xl font-semibold">
-                  {formatPrice(plan)}
+                  {formatPrice(plan, t)}
                 </div>
                 <div className="mt-2 text-xs text-muted">
-                  {plan.durationInDays} days · {plan.currency || "INR"}
+                  {plan.durationInDays} {t("subscription.days")} · {plan.currency || "INR"}
                 </div>
 
                 <ul className="mt-4 space-y-2 text-xs text-muted">
-                  {featureLabel(plan).map(feature => (
+                  {featureLabel(plan, t).map(feature => (
                     <li key={feature}>• {feature}</li>
                   ))}
                 </ul>
@@ -183,7 +185,7 @@ export default function SubscriptionPage() {
                   onClick={() => handlePurchase(plan)}
                   disabled={subscribeMutation.isPending}
                 >
-                  {plan.price === 0 ? "Activate free plan" : "Continue to pay"}
+                  {plan.price === 0 ? t("subscription.activateFree") : t("subscription.continuePay")}
                 </button>
               </div>
             ))}

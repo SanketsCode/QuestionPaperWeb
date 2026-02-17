@@ -3,8 +3,10 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getNotifications, NotificationItem } from "../../lib/api";
+import { useLanguage } from "../LanguageContext";
 
 export default function NotificationsPage() {
+  const { t } = useLanguage();
   const notificationsQuery = useQuery({
     queryKey: ["notifications", 1],
     queryFn: () => getNotifications(1, 20),
@@ -22,26 +24,26 @@ export default function NotificationsPage() {
         <header className="flex flex-col gap-3 rounded-[28px] border border-border bg-card p-6 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-muted">
-              Notifications
+              {t("notifications.title")}
             </p>
-            <h1 className="mt-3 font-display text-3xl">All updates</h1>
+            <h1 className="mt-3 font-display text-3xl">{t("notifications.allUpdates")}</h1>
           </div>
           <button className="rounded-full border border-border px-4 py-2 text-sm font-semibold">
-            Mark all read
+            {t("notifications.markAllRead")}
           </button>
         </header>
 
         {notificationsQuery.isLoading ? (
           <div className="rounded-3xl border border-border bg-card p-6 text-sm text-muted">
-            Loading notifications...
+            {t("notifications.loading")}
           </div>
         ) : notificationsQuery.isError ? (
           <div className="rounded-3xl border border-red-200 bg-red-50 p-6 text-sm text-red-700">
-            Failed to load notifications.
+            {t("notifications.failed")}
           </div>
         ) : items.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-border bg-card p-10 text-center text-sm text-muted">
-            No notifications yet.
+            {t("notifications.empty")}
           </div>
         ) : (
           <div className="grid gap-4">

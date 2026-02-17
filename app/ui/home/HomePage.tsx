@@ -11,7 +11,11 @@ import {
   getExamCategories,
   getExamSubCategories,
   getQuestionPapersPaged,
+  // QuestionPaper, // Removed duplicate import
+  // getRecentActivity, // Removed non-existent import
 } from "../../lib/api";
+import { useLanguage } from "../LanguageContext";
+import { useRouter } from "next/navigation";
 
 const cardColors = [
   "from-sky-500/15 to-sky-500/0",
@@ -70,6 +74,8 @@ function PaperCard({
 }
 
 export default function HomePage() {
+  const router = useRouter();
+  const { t } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<ExamCategory | null>(
     null
   );
@@ -148,7 +154,7 @@ export default function HomePage() {
               Dashboard
             </p>
             <h1 className="mt-3 font-display text-3xl md:text-4xl">
-              Welcome back, choose where to start.
+              {t("home.welcome")}
             </h1>
             <p className="mt-3 text-sm text-muted">
               Select an exam category, take a mock test, or join competitions.
@@ -159,7 +165,7 @@ export default function HomePage() {
               className="rounded-full border border-border px-5 py-3 text-sm font-semibold"
               href="/profile"
             >
-              View profile
+              {t("nav.profile")}
             </a>
             <a
               className="rounded-full bg-brand px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_35px_rgba(15,118,110,0.35)]"

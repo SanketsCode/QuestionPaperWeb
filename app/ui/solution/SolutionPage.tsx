@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { MultiLangContent, QuestionPaperFull } from "../../lib/api";
+import MathRenderer from "../components/MathRenderer";
+import { useLanguage } from "../LanguageContext";
 
 type StoredResult = {
   paper: QuestionPaperFull;
@@ -16,6 +18,7 @@ const getContent = (content: MultiLangContent | undefined, lang: string) => {
 export default function SolutionPage() {
   const [paper, setPaper] = useState<QuestionPaperFull | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState("en");
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -41,9 +44,9 @@ export default function SolutionPage() {
   if (!paper) {
     return (
       <div className="px-6 py-10 text-sm text-muted">
-        No solutions available.{" "}
+        {t("solution.noSolutions")}{" "}
         <a className="text-brand" href="/results">
-          Go to results
+          {t("solution.goToResults")}
         </a>
       </div>
     );
@@ -54,10 +57,10 @@ export default function SolutionPage() {
       <div className="mx-auto max-w-5xl space-y-8">
         <header className="rounded-[28px] border border-border bg-card p-6">
           <p className="text-xs uppercase tracking-[0.3em] text-muted">
-            Solutions
+            {t("solution.title")}
           </p>
           <h1 className="mt-3 font-display text-3xl">
-            {paper.exam_name} answers
+            {paper.exam_name} {t("solution.answers")}
           </h1>
         </header>
 
@@ -103,18 +106,18 @@ export default function SolutionPage() {
                   </div>
                   <div>
                     <div className="text-sm font-semibold">
-                      {questionContent.text}
+                      <MathRenderer text={questionContent.text} />
                     </div>
                   </div>
                 </div>
 
                 <div className="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-xs font-semibold text-emerald-700">
-                  Correct answer: {correctText}
+                  {t("solution.correctAnswer")}: <MathRenderer text={correctText} />
                 </div>
 
                 {explanationContent.text ? (
                   <div className="mt-4 rounded-2xl border border-border bg-white/70 px-4 py-3 text-xs text-muted">
-                    {explanationContent.text}
+                    <MathRenderer text={explanationContent.text} />
                   </div>
                 ) : null}
               </div>

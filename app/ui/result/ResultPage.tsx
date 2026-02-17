@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ExamResult, QuestionPaperFull } from "../../lib/api";
+import { useLanguage } from "../LanguageContext";
 
 type ResultState = {
   result: ExamResult;
@@ -10,6 +11,7 @@ type ResultState = {
 
 export default function ResultPage() {
   const [state, setState] = useState<ResultState | null>(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -22,9 +24,9 @@ export default function ResultPage() {
   if (!state) {
     return (
       <div className="px-6 py-10 text-center text-sm text-muted">
-        No result found.{" "}
+        {t("results.noResults") || "No results found."}{" "}
         <a className="text-brand" href="/home">
-          Go home
+          {t("results.backHome")}
         </a>
       </div>
     );
@@ -42,10 +44,10 @@ export default function ResultPage() {
       <div className="mx-auto max-w-5xl space-y-8">
         <header className="rounded-[28px] border border-border bg-card p-6">
           <p className="text-xs uppercase tracking-[0.3em] text-muted">
-            Result
+            {t("results.title")}
           </p>
           <h1 className="mt-3 font-display text-3xl">
-            {paper.exam_name} analysis
+            {paper.exam_name} {t("results.analysis")}
           </h1>
         </header>
 
@@ -62,14 +64,14 @@ export default function ResultPage() {
             <div
               className={`mt-4 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold ${badgeColor}`}
             >
-              {isQualified ? "Qualified" : "Not qualified"}
+              {isQualified ? t("results.qualified") : t("results.notQualified")}
             </div>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
             <div className="rounded-2xl border border-border bg-white/70 p-4">
               <div className="text-xs uppercase tracking-[0.2em] text-muted">
-                Percentage
+                {t("results.percentage")}
               </div>
               <div className="mt-2 text-2xl font-semibold">
                 {result.percentage}%
@@ -77,7 +79,7 @@ export default function ResultPage() {
             </div>
             <div className="rounded-2xl border border-border bg-white/70 p-4">
               <div className="text-xs uppercase tracking-[0.2em] text-muted">
-                Accuracy
+                {t("results.accuracy")}
               </div>
               <div className="mt-2 text-2xl font-semibold">
                 {result.accuracy}%
@@ -85,7 +87,7 @@ export default function ResultPage() {
             </div>
             <div className="rounded-2xl border border-border bg-white/70 p-4">
               <div className="text-xs uppercase tracking-[0.2em] text-muted">
-                Correct
+                {t("results.correct")}
               </div>
               <div className="mt-2 text-2xl font-semibold">
                 {result.correct}/{result.totalQuestions}
@@ -93,7 +95,7 @@ export default function ResultPage() {
             </div>
             <div className="rounded-2xl border border-border bg-white/70 p-4">
               <div className="text-xs uppercase tracking-[0.2em] text-muted">
-                Incorrect
+                {t("results.wrong")}
               </div>
               <div className="mt-2 text-2xl font-semibold">
                 {result.incorrect}
@@ -107,19 +109,19 @@ export default function ResultPage() {
             href={`/question-paper/${paper._id}`}
             className="rounded-full border border-border px-5 py-3 text-sm font-semibold"
           >
-            Retake test
+            {t("results.retake")}
           </a>
           <a
             href="/solution"
             className="rounded-full border border-border px-5 py-3 text-sm font-semibold"
           >
-            View solutions
+            {t("results.viewSolutions")}
           </a>
           <a
             href="/home"
             className="rounded-full bg-brand px-5 py-3 text-sm font-semibold text-white"
           >
-            Back home
+            {t("results.backHome")}
           </a>
         </div>
       </div>

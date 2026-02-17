@@ -12,6 +12,8 @@ import {
 } from "../../lib/api";
 import { getCustomPaperById } from "../../lib/customPapers";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
+import MathRenderer from "../components/MathRenderer";
+import { useLanguage } from "../LanguageContext";
 
 type ResolvedContent = { text: string; image?: string };
 
@@ -42,6 +44,7 @@ export default function QuestionPaperPage() {
   const id = params?.id as string;
   const isCustom = searchParams.get("custom") === "1";
   const isAcademy = searchParams.get("academy") === "1";
+  const { t } = useLanguage();
 
   const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -220,7 +223,7 @@ export default function QuestionPaperPage() {
 
   if (paperQuery.isLoading) {
     return (
-      <div className="px-6 py-10 text-sm text-muted">Loading paper...</div>
+      <div className="px-6 py-10 text-sm text-muted">{t("exam.loading")}</div>
     );
   }
 
@@ -230,16 +233,16 @@ export default function QuestionPaperPage() {
       <div className="px-6 py-10 text-sm text-muted">
         {errorStatus === 403 ? (
           <>
-            Access to this paper is restricted.{" "}
+            {t("paper.restricted")}{" "}
             <a className="text-brand" href="/subscription">
-              Upgrade your plan
+              {t("paper.upgrade")}
             </a>
           </>
         ) : (
           <>
-            Paper not available.{" "}
+            {t("exam.notAvailable")}{" "}
             <button className="text-brand" onClick={() => router.back()}>
-              Go back
+              {t("exam.goBack")}
             </button>
           </>
         )}
@@ -263,7 +266,7 @@ export default function QuestionPaperPage() {
             className="text-sm font-semibold text-muted"
             onClick={() => router.back()}
           >
-            Exit
+            {t("exam.exit")}
           </button>
           <div className="text-sm font-semibold">
             {paperQuery.data.exam_name}
@@ -275,7 +278,7 @@ export default function QuestionPaperPage() {
 
         <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border bg-white/70 p-4">
           <div className="text-sm font-semibold text-brand">
-            Time left: {formatTime(timeLeft)}
+            {t("exam.timeLeft")}: {formatTime(timeLeft)}
           </div>
           {paperQuery.data.supported_languages?.length > 1 ? (
             <select
@@ -304,7 +307,7 @@ export default function QuestionPaperPage() {
         <div className="rounded-3xl border border-border bg-card p-6">
           <div className="flex items-center justify-between">
             <div className="text-sm font-semibold">
-              Question {currentQuestionIndex + 1}
+              {t("exam.question")} {currentQuestionIndex + 1}
             </div>
             <button
               onClick={() => {
@@ -315,26 +318,37 @@ export default function QuestionPaperPage() {
               }}
               className="text-xs font-semibold text-amber-600"
             >
-              {marked.has(currentQuestionIndex) ? "Unmark" : "Mark"}
+              {marked.has(currentQuestionIndex) ? t("exam.unmark") : t("exam.mark")}
             </button>
           </div>
-          <div className="mt-4 text-sm">{questionContent.text}</div>
+          <div className="mt-4 text-sm">
+            <MathRenderer text={questionContent.text} />
+          </div>
           <div className="mt-6 grid gap-3">
             {options.map((option, index) => {
-              const isSelected = answers[currentQuestionIndex] === index;
+              let status: "default" | "selected" | "marked" = "default";
+              const isMarked = marked.has(currentQuestionIndex);
+              const isAnswered = answers[currentQuestionIndex] === index;
+
+              if (isAnswered) status = "selected";
+              else if (isMarked) status = "marked";
+
               return (
                 <button
                   key={index}
                   onClick={() =>
-                    setAnswers(prev => ({ ...prev, [currentQuestionIndex]: index }))
+                    setAnswers(prev => ({
+                      ...prev,
+                      [currentQuestionIndex]: index,
+                    }))
                   }
                   className={`rounded-2xl border px-4 py-3 text-left text-sm ${
-                    isSelected
+                    status === "selected"
                       ? "border-brand bg-brand/10"
                       : "border-border bg-white"
                   }`}
                 >
-                  {option.text || "Option"}
+                  <MathRenderer text={option.text || "Option"} />
                 </button>
               );
             })}
@@ -350,13 +364,13 @@ export default function QuestionPaperPage() {
                 setCurrentQuestionIndex(prev => Math.max(0, prev - 1))
               }
             >
-              Previous
+              {t("exam.previous")}
             </button>
             <button
               className="rounded-full border border-border px-4 py-2 text-sm font-semibold"
               onClick={() => setPaletteOpen(true)}
             >
-              Palette
+              {t("exam.palette")}
             </button>
           </div>
           <button
@@ -369,57 +383,59 @@ export default function QuestionPaperPage() {
               }
             }}
           >
-            {currentQuestionIndex === totalQuestions - 1 ? "Finish" : "Next"}
+            {currentQuestionIndex === totalQuestions - 1 ? t("exam.finish") : t("exam.next")}
           </button>
         </div>
       </div>
 
       {paletteOpen ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-6">
-          <div className="w-full max-w-lg rounded-3xl border border-border bg-white p-6">
-            <div className="flex items-center justify-between">
-              <div className="text-sm font-semibold">Question palette</div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-6 backdrop-blur-sm">
+          <div className="flex max-h-[80vh] w-full max-w-lg flex-col rounded-3xl border border-border bg-white p-6 shadow-2xl">
+            <div className="flex items-center justify-between pb-4 border-b border-border mb-4">
+              <div className="text-sm font-semibold">{t("exam.palette")}</div>
               <button
-                className="text-xs font-semibold text-muted"
+                className="text-xs font-semibold text-muted hover:text-foreground"
                 onClick={() => setPaletteOpen(false)}
               >
-                Close
+                {t("exam.close")}
               </button>
             </div>
-            <div className="mt-4 grid grid-cols-6 gap-2 text-xs">
-              {paletteQuestions.map(item => (
-                <button
-                  key={item.index}
-                  onClick={() => {
-                    setCurrentQuestionIndex(item.index);
-                    setPaletteOpen(false);
-                  }}
-                  className={`rounded-lg border px-2 py-2 ${
-                    item.status === "answered"
-                      ? "border-brand bg-brand/10 text-brand"
-                      : item.status === "marked"
-                      ? "border-amber-400 bg-amber-50 text-amber-700"
-                      : item.status === "visited"
-                      ? "border-slate-300 bg-slate-100 text-slate-700"
-                      : "border-border bg-white text-muted"
-                  }`}
-                >
-                  {item.index + 1}
-                </button>
-              ))}
+            <div className="flex-1 overflow-y-auto pr-1 custom-scrollbar">
+              <div className="grid grid-cols-5 sm:grid-cols-6 gap-2 text-xs">
+                {paletteQuestions.map(item => (
+                  <button
+                    key={item.index}
+                    onClick={() => {
+                      setCurrentQuestionIndex(item.index);
+                      setPaletteOpen(false);
+                    }}
+                    className={`rounded-lg border px-2 py-2.5 transition-colors ${
+                      item.status === "answered"
+                        ? "border-brand bg-brand/10 text-brand"
+                        : item.status === "marked"
+                        ? "border-amber-400 bg-amber-50 text-amber-700"
+                        : item.status === "visited"
+                        ? "border-slate-300 bg-slate-100 text-slate-700"
+                        : "border-border bg-white text-muted hover:bg-slate-50"
+                    }`}
+                  >
+                    {item.index + 1}
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="mt-6 flex items-center justify-between">
+            <div className="mt-4 flex items-center justify-between pt-4 border-t border-border">
               <div className="text-xs text-muted">
-                Answered {Object.keys(answers).length} / {totalQuestions}
+                {t("exam.answered")} {Object.keys(answers).length} / {totalQuestions}
               </div>
               <button
-                className="rounded-full bg-brand px-4 py-2 text-xs font-semibold text-white"
+                className="rounded-full bg-brand px-4 py-2 text-xs font-semibold text-white hover:bg-brand/90"
                 onClick={() => {
                   setPaletteOpen(false);
                   calculateAndFinish();
                 }}
               >
-                Submit test
+                {t("exam.submit")}
               </button>
             </div>
           </div>

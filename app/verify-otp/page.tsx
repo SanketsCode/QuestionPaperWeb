@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { sendOtp, verifyOtp } from "../lib/api";
 import { useRouter, useSearchParams } from "next/navigation";
 import AuthShell from "../ui/auth/AuthShell";
+import { useLanguage } from "../ui/LanguageContext";
 
 const OTP_LENGTH = 6;
 
@@ -19,6 +20,7 @@ function VerifyOtpForm() {
   const [timer, setTimer] = useState(30);
   const [error, setError] = useState("");
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (!mobile) {
@@ -98,14 +100,14 @@ function VerifyOtpForm() {
 
   return (
     <AuthShell
-      title="Verify your phone."
-      subtitle="Enter the 6-digit OTP we sent to your mobile number."
+      title={t("auth.verifyTitle")}
+      subtitle={t("auth.verifySubtitle")}
       backHref="/login"
-      backLabel="Change number"
+      backLabel={t("auth.changeNumber")}
     >
       <form onSubmit={handleVerify} className="space-y-6">
         <div className="text-sm text-muted">
-          OTP sent to <span className="font-semibold text-foreground">+91 {mobile}</span>
+          {t("auth.otpSentTo")} <span className="font-semibold text-foreground">+91 {mobile}</span>
         </div>
 
         <div className="flex flex-wrap justify-center gap-3">
@@ -139,7 +141,7 @@ function VerifyOtpForm() {
             disabled={timer > 0 || resendMutation.isPending}
             className="font-semibold text-brand disabled:text-muted"
           >
-            Resend OTP
+            {t("auth.resend")}
           </button>
           <div className="rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold text-brand-dark">
             00:{timer.toString().padStart(2, "0")}
@@ -151,7 +153,7 @@ function VerifyOtpForm() {
           disabled={verifyMutation.isPending}
           className="flex w-full items-center justify-center rounded-2xl bg-brand px-4 py-4 text-sm font-semibold text-white shadow-[0_14px_35px_rgba(15,118,110,0.35)] disabled:opacity-70"
         >
-          {verifyMutation.isPending ? "Verifying..." : "Verify & Continue"}
+          {verifyMutation.isPending ? t("auth.verifying") : t("auth.verifyBtn")}
         </button>
       </form>
     </AuthShell>

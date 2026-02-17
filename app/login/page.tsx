@@ -6,6 +6,7 @@ import { sendOtp } from "../lib/api";
 import { useRouter, useSearchParams } from "next/navigation";
 import AuthShell from "../ui/auth/AuthShell";
 import { useEffect } from "react";
+import { useLanguage } from "../ui/LanguageContext";
 
 import { Suspense } from "react";
 
@@ -15,6 +16,7 @@ function LoginForm() {
   const next = params.get("next");
   const [mobile, setMobile] = useState("");
   const [error, setError] = useState("");
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -50,14 +52,14 @@ function LoginForm() {
 
   return (
     <AuthShell
-      title="Welcome back."
-      subtitle="Login with your mobile number to continue your exam prep."
+      title={t("auth.welcomeBack")}
+      subtitle={t("auth.loginSubtitle")}
       backHref="/"
-      backLabel="Home"
+      backLabel={t("nav.home")}
     >
       <form onSubmit={handleSubmit} className="space-y-6">
         <label className="block text-sm font-semibold text-muted">
-          Mobile number
+          {t("auth.mobileNumber")}
           <div className="mt-2 flex overflow-hidden rounded-2xl border border-border bg-white/80">
             <div className="flex items-center justify-center border-r border-border px-4 text-sm font-semibold text-foreground">
               +91
@@ -86,11 +88,11 @@ function LoginForm() {
           disabled={mutation.isPending}
           className="flex w-full items-center justify-center rounded-2xl bg-brand px-4 py-4 text-sm font-semibold text-white shadow-[0_14px_35px_rgba(15,118,110,0.35)] disabled:opacity-70"
         >
-          {mutation.isPending ? "Sending OTP..." : "Send OTP"}
+          {mutation.isPending ? t("auth.sendingOtp") : t("auth.sendOtp")}
         </button>
 
         <p className="text-xs text-muted">
-          By continuing you agree to our terms of service and privacy policy.
+          {t("auth.agreement")}
         </p>
       </form>
     </AuthShell>
