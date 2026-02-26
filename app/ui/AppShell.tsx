@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLanguage } from "./LanguageContext";
+import { useAuth } from "../lib/hooks/useAuth";
 
 const primaryNavItems = [
   { href: "/home", label: "Home" },
@@ -21,15 +22,6 @@ const secondaryNavItems = [
 
 const allNavItems = [...primaryNavItems, ...secondaryNavItems];
 
-const hideShellPrefixes = [
-  "/login",
-  "/verify-otp",
-  "/question-paper",
-  "/competitions/",
-];
-
-const hideShellExact = ["/", "/competitions"];
-
 export default function AppShell({
   children,
 }: {
@@ -41,23 +33,22 @@ export default function AppShell({
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const { language, setLanguage, t } = useLanguage();
 
-  useEffect(() => {
-    const publicRoutes = ["/", "/login", "/verify-otp"];
-    if (publicRoutes.includes(pathname)) return;
-    if (typeof window === "undefined") return;
-    const token = localStorage.getItem("qp_access_token");
-    if (!token) {
-      router.replace(`/login?next=${encodeURIComponent(pathname)}`);
-    }
-  }, [pathname, router]);
+  /*
+   * Auth Validation
+   * We use the useAuth hook to validate the token and get user details.
+   * If loading, we show nothing (or a spinner).
+   * If error (401), useAuth handles redirect.
+   * If successes, we render the shell.
+   */
+  const { user, isLoading } = useAuth(true); // true = redirect if unauthenticated
 
-  const hideShell =
-    hideShellExact.includes(pathname) ||
-    hideShellPrefixes.some(prefix => pathname.startsWith(prefix));
-
-  if (hideShell) {
-    return <>{children}</>;
+  if (isLoading) {
+      // Optional: Render a loading skeleton or full-screen spinner here
+      return <div className="flex h-screen items-center justify-center">Loading...</div>;
   }
+
+  // If we are here, we are authenticated (or about to be redirected)
+
 
   return (
     <div className="min-h-screen">

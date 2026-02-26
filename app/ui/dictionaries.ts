@@ -23,6 +23,9 @@ export const translations: Record<Language, Dictionary> = {
       terms: "Terms",
       support: "Support",
       copyright: "QuestionPaper © 2026. All rights reserved.",
+      features: "Features",
+      liveData: "Live Data",
+      getStarted: "Get Started",
     },
     landing: {
       hero: {
@@ -218,6 +221,8 @@ export const translations: Record<Language, Dictionary> = {
       create: "Create test",
       creating: "Creating...",
       limitReached: "You’ve reached today’s free limit. Upgrade your plan to create more.",
+      titleInput: "Title (optional)",
+      selectSubject: "Select a subject",
       tests: {
         navTitle: "Custom tests",
         title: "Your created practice papers",
@@ -283,6 +288,9 @@ export const translations: Record<Language, Dictionary> = {
       terms: "शर्तें",
       support: "समर्थन",
       copyright: "QuestionPaper © 2026. सर्वाधिकार सुरक्षित।",
+      features: "सुविधाएं",
+      liveData: "लाइव डेटा",
+      getStarted: "शुरू करें",
     },
     landing: {
       hero: {
@@ -478,6 +486,8 @@ export const translations: Record<Language, Dictionary> = {
       create: "टेस्ट बनाएं",
       creating: "बनाया जा रहा है...",
       limitReached: "आप आज की मुफ्त सीमा तक पहुँच चुके हैं। और बनाने के लिए अपनी योजना अपग्रेड करें।",
+      titleInput: "शीर्षक (वैकल्पिक)",
+      selectSubject: "एक विषय चुनें",
       tests: {
         navTitle: "कस्टम टेस्ट्स",
         title: "आपके बनाए गए अभ्यास पेपर्स",
@@ -615,6 +625,9 @@ export const translations: Record<Language, Dictionary> = {
       terms: "अटी",
       support: "मदत",
       copyright: "QuestionPaper © 2026. सर्व हक्क राखीव.",
+      features: "वैशिष्ट्ये",
+      liveData: "थेट डेटा",
+      getStarted: "प्रारंभ करा",
     },
     landing: {
       hero: {
@@ -809,7 +822,9 @@ export const translations: Record<Language, Dictionary> = {
       difficulty: "काठिन्य",
       create: "चाचणी तयार करा",
       creating: "तयार होत आहे...",
-      limitReached: "तुम्ही आजची विनामूल्य मर्यादा गाठली आहे. अधिक तयार करण्यासाठी तुमची योजना अपग्रेड करा.",
+      limitReached: "आपण आजच्या विनामूल्य मर्यादेपर्यंत पोहोचला आहात. अधिक तयार करण्यासाठी आपली योजना अपग्रेड करा.",
+      titleInput: "शीर्षक (पर्यायी)",
+      selectSubject: "एक विषय निवडा",
       tests: {
         navTitle: "कस्टम टेस्ट्स",
         title: "तुमचे तयार केलेले सराव पेपर्स",
