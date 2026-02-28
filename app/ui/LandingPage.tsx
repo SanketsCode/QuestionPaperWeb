@@ -63,8 +63,7 @@ function formatDuration(minutes?: number) {
 }
 
 function getPaperMeta(paper: QuestionPaper) {
-  const total =
-    paper.total_questions ?? paper.total_que_count ?? undefined;
+  const total = paper.total_questions ?? paper.total_que_count ?? undefined;
   const duration = paper.duration ? `${paper.duration} mins` : "—";
   return {
     total,
@@ -82,13 +81,7 @@ function getCompetitionStatus(competition: Competition) {
   return "upcoming";
 }
 
-function StatPill({
-  label,
-  value,
-}: {
-  label: string;
-  value: string | number;
-}) {
+function StatPill({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="rounded-full border border-border bg-card px-4 py-2 text-sm text-muted">
       <span className="font-semibold text-foreground">{value}</span>{" "}
@@ -118,7 +111,7 @@ function DataCard({
         {items.length === 0 ? (
           <p className="text-sm text-muted">{empty}</p>
         ) : (
-          items.map(item => (
+          items.map((item) => (
             <div
               key={item.id}
               className="rounded-2xl border border-border/60 bg-white/70 px-4 py-3"
@@ -190,7 +183,7 @@ export default function LandingPage() {
       id: competition._id,
       primary: getCompetitionTitle(competition),
       secondary: `${getCompetitionStatus(competition)} · ${formatDuration(
-        competition.durationInMinutes
+        competition.durationInMinutes,
       )}`,
     })) ?? [];
 
@@ -267,10 +260,22 @@ export default function LandingPage() {
               </a>
             </div>
             <div className="flex flex-wrap gap-3">
-              <StatPill label={t("landing.stats.categories")} value={stats.categories} />
-              <StatPill label={t("landing.stats.subjects")} value={stats.subjects} />
-              <StatPill label={t("landing.stats.competitions")} value={stats.competitions} />
-              <StatPill label={t("landing.stats.papers")} value={stats.papers} />
+              <StatPill
+                label={t("landing.stats.categories")}
+                value={stats.categories}
+              />
+              <StatPill
+                label={t("landing.stats.subjects")}
+                value={stats.subjects}
+              />
+              <StatPill
+                label={t("landing.stats.competitions")}
+                value={stats.competitions}
+              />
+              <StatPill
+                label={t("landing.stats.papers")}
+                value={stats.papers}
+              />
             </div>
           </div>
           <div className="rounded-[32px] border border-border bg-card p-8 shadow-[0_30px_60px_rgba(15,118,110,0.12)]">
@@ -339,20 +344,21 @@ export default function LandingPage() {
             </p>
           </div>
           <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {[
-              "smartPractice",
-              "competitions",
-              "insights",
-              "academy",
-            ].map((key) => (
-              <div
-                key={key}
-                className="rounded-3xl border border-border bg-card p-6"
-              >
-                <h3 className="text-lg font-semibold">{t(`landing.features.${key}.title`)}</h3>
-                <p className="mt-3 text-sm text-muted">{t(`landing.features.${key}.desc`)}</p>
-              </div>
-            ))}
+            {["smartPractice", "competitions", "insights", "academy"].map(
+              (key) => (
+                <div
+                  key={key}
+                  className="rounded-3xl border border-border bg-card p-6"
+                >
+                  <h3 className="text-lg font-semibold">
+                    {t(`landing.features.${key}.title`)}
+                  </h3>
+                  <p className="mt-3 text-sm text-muted">
+                    {t(`landing.features.${key}.desc`)}
+                  </p>
+                </div>
+              ),
+            )}
           </div>
         </div>
       </section>
@@ -368,9 +374,7 @@ export default function LandingPage() {
                 {t("landing.live.title")}
               </h2>
             </div>
-            <div className="text-sm text-muted">
-              {t("landing.live.notes")}
-            </div>
+            <div className="text-sm text-muted">{t("landing.live.notes")}</div>
           </div>
 
           <div className="mt-10 grid gap-6 md:grid-cols-2">
@@ -435,9 +439,7 @@ export default function LandingPage() {
                     </div>
                     <div>
                       <div className="text-sm font-semibold">{step.title}</div>
-                      <div className="text-xs text-muted">
-                        {step.desc}
-                      </div>
+                      <div className="text-xs text-muted">{step.desc}</div>
                     </div>
                   </div>
                 ))}
@@ -454,11 +456,16 @@ export default function LandingPage() {
                 {t("landing.flow.responsive.desc")}
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                {t("landing.flow.responsive.badges").map((badge: string, index: number) => (
-                  <div key={index} className="rounded-full border border-border bg-card px-4 py-2 text-xs">
-                    {badge}
-                  </div>
-                ))}
+                {t("landing.flow.responsive.badges").map(
+                  (badge: string, index: number) => (
+                    <div
+                      key={index}
+                      className="rounded-full border border-border bg-card px-4 py-2 text-xs"
+                    >
+                      {badge}
+                    </div>
+                  ),
+                )}
               </div>
               <button className="mt-8 w-fit rounded-full bg-brand-dark px-6 py-3 text-sm font-semibold text-white">
                 {t("landing.flow.responsive.build")}
@@ -494,8 +501,17 @@ export default function LandingPage() {
             </div>
           </div>
           <footer className="mt-10 flex flex-col gap-4 text-xs text-muted md:flex-row md:items-center md:justify-between">
-            <div>{t("nav.copyright") || "QuestionPaper © 2026. All rights reserved."}</div>
+            <div>
+              {t("nav.copyright") ||
+                "QuestionPaper © 2026. All rights reserved."}
+            </div>
             <div className="flex flex-wrap gap-6">
+              <Link
+                href="/sources"
+                className="hover:text-brand transition-colors font-medium"
+              >
+                Disclaimer & Official Sources
+              </Link>
               <span>{t("nav.privacy")}</span>
               <span>{t("nav.terms")}</span>
               <span>{t("nav.support")}</span>

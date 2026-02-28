@@ -4,64 +4,64 @@ import { ArrowLeft, ExternalLink, ShieldAlert } from "lucide-react";
 export default function SourcesPage() {
   const sources = [
     {
-      name: "Railway Recruitment Board (RRB)",
-      url: "https://indianrailways.gov.in/",
-      description:
-        "Official portal for Indian Railways recruitment and notifications.",
-    },
-
-    {
       name: "Staff Selection Commission (SSC)",
       url: "https://ssc.gov.in",
       description:
-        "Official portal for Staff Selection Commission exams (CGL, CHSL, etc.).",
-    },
-    {
-      name: "Maharashtra Public Service Commission (MPSC)",
-      url: "https://mpsc.gov.in",
-      description:
-        "Official portal for Maharashtra state civil services exams.",
-    },
-    {
-      name: "Indian Air Force (AFCAT)",
-      url: "https://afcat.cdac.in/AFCAT/",
-      description:
-        "Official portal for Air Force Common Admission Test (AFCAT) notifications and recruitment.",
-    },
-    {
-      name: "Join Indian Army (GD & Others)",
-      url: "https://joinindianarmy.nic.in/default.aspx",
-      description:
-        "Official portal for Indian Army recruitment including General Duty (GD), Technical, and other posts.",
-    },
-    {
-      name: "Indian Air Force (Agniveer & Others)",
-      url: "https://indianairforce.nic.in/",
-      description:
-        "Official portal for Indian Air Force general recruitment and updates.",
+        "Official portal for SSC exams including CGL, CHSL, MTS, and GD Constable.",
     },
     {
       name: "Union Public Service Commission (UPSC)",
       url: "https://upsc.gov.in/",
       description:
-        "Official portal for UPSC exams including NDA, CDS, Civil Services, and others.",
+        "Official portal for UPSC exams including Civil Services, NDA, CDS, and Engineering Services.",
     },
     {
-      name: "Maharashtra State Police",
-      url: "https://mahapolice.gov.in/",
+      name: "Railway Recruitment Board (RRB)",
+      url: "https://indianrailways.gov.in/railwayboard/view_section.jsp?lang=0&id=0,4,1244",
       description:
-        "Official portal for Maharashtra State Police recruitment and notifications (Police Bharti).",
+        "Centralized portal for Indian Railways recruitment notifications and regional RRB links.",
     },
     {
-      name: "Railway Recruitment Board (RRB) Mumbai",
+      name: "RRB Mumbai",
       url: "https://www.rrbmumbai.gov.in/",
       description:
-        "Official portal for Railway Recruitment Board, Mumbai region.",
+        "Official portal for Railway Recruitment Board, Mumbai region updates.",
     },
     {
-      name: "MyGov Portal",
+      name: "Maharashtra Public Service Commission (MPSC)",
+      url: "https://mpsc.gov.in",
+      description:
+        "Official portal for Maharashtra state civil services recruitment and exams.",
+    },
+    {
+      name: "Maharashtra State Police (Police Bharti)",
+      url: "https://mahapolice.gov.in/",
+      description:
+        "Official recruitment portal for Maharashtra State Police constables and other ranks.",
+    },
+    {
+      name: "Join Indian Army (Agniveer & Others)",
+      url: "https://joinindianarmy.nic.in/",
+      description:
+        "Official portal for Indian Army recruitment including Agniveer and regular commissions.",
+    },
+    {
+      name: "Indian Air Force (AFCAT & AgniveerVayu)",
+      url: "https://afcat.cdac.in/AFCAT/",
+      description:
+        "Official portal for Air Force Common Admission Test and AgniveerVayu recruitment.",
+    },
+    {
+      name: "MyGov.in",
       url: "https://www.mygov.in/",
-      description: "Government of India's citizen engagement platform.",
+      description:
+        "Government of India's citizen engagement and information platform.",
+    },
+    {
+      name: "National Career Service (NCS)",
+      url: "https://www.ncs.gov.in/",
+      description:
+        "A primary portal for various government job notifications and career services.",
     },
   ];
 
@@ -94,41 +94,46 @@ export default function SourcesPage() {
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Transparency is our priority. Below you will find the official
               sources of the information we provide in our app, along with
-              important disclaimers regarding our service.
+              important disclaimers regarding our service as an independent
+              educational platform.
             </p>
           </div>
 
           {/* Disclaimer Alert */}
-          <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-r-lg mb-12 shadow-sm">
+          <div className="bg-orange-50 border-l-4 border-orange-500 p-6 rounded-r-lg mb-12 shadow-sm">
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0 mt-1">
-                <ShieldAlert className="w-8 h-8 text-red-500" />
+                <ShieldAlert className="w-8 h-8 text-orange-500" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-red-800 mb-2">
-                  NOT A GOVERNMENT ENTITY
+                <h3 className="text-lg font-bold text-orange-800 mb-2">
+                  OFFICIAL DISCLAIMER: NOT A GOVERNMENT ENTITY
                 </h3>
-                <div className="text-red-700 space-y-3 font-medium">
+                <div className="text-orange-700 space-y-3 font-medium">
                   <p>
                     <strong>Question Paper – Exam Prep App</strong> is an
                     independent educational platform created to help students
-                    prepare for competitive exams.
+                    prepare for competitive exams through simulators and mock
+                    tests.
                   </p>
                   <p>
-                    This app is <strong>NOT</strong> affiliated with, endorsed
-                    by, authorized by, or in any way officially connected with
-                    any government entity, agency, or official organization.
+                    <strong>IMPORTANT:</strong> This app is <strong>NOT</strong>{" "}
+                    affiliated with, endorsed by, authorized by, or in any way
+                    officially connected with any government entity, agency, or
+                    official organization.
                   </p>
                   <p>
                     We collect publicly available educational resources,
                     previous year question papers, and exam practice content
-                    from official government portals (listed below) strictly for
-                    educational purposes.
+                    directly from official government portals (listed below)
+                    strictly for educational and practice purposes.
                   </p>
                   <p>
                     Users are strongly advised to always verify exam
                     notifications, results, and recruitment updates directly
-                    from the respective official government websites.
+                    from the respective official government websites. We do not
+                    guarantee the absolute accuracy of the information curated
+                    here.
                   </p>
                 </div>
               </div>
@@ -141,6 +146,10 @@ export default function SourcesPage() {
               <h2 className="text-xl font-semibold text-gray-900 font-[family-name:var(--font-sora)]">
                 Official Sources of Information
               </h2>
+              <p className="text-sm text-gray-500 mt-1">
+                All data is curated from these official portals for educational
+                use:
+              </p>
             </div>
 
             <ul className="divide-y divide-gray-100">
@@ -157,6 +166,9 @@ export default function SourcesPage() {
                       <p className="text-gray-500 text-sm">
                         {source.description}
                       </p>
+                      <code className="text-[10px] text-gray-400 block mt-1">
+                        Source: {source.url}
+                      </code>
                     </div>
                     <a
                       href={source.url}
