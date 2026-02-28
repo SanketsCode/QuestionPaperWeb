@@ -30,7 +30,7 @@ export default function SourcesPage() {
     },
     {
       name: "Join Indian Army (GD & Others)",
-      url: "https://joinindianarmy.nic.in/",
+      url: "https://joinindianarmy.nic.in/default.aspx",
       description:
         "Official portal for Indian Army recruitment including General Duty (GD), Technical, and other posts.",
     },
@@ -39,6 +39,24 @@ export default function SourcesPage() {
       url: "https://indianairforce.nic.in/",
       description:
         "Official portal for Indian Air Force general recruitment and updates.",
+    },
+    {
+      name: "Union Public Service Commission (UPSC)",
+      url: "https://upsc.gov.in/",
+      description:
+        "Official portal for UPSC exams including NDA, CDS, Civil Services, and others.",
+    },
+    {
+      name: "Maharashtra State Police",
+      url: "https://mahapolice.gov.in/",
+      description:
+        "Official portal for Maharashtra State Police recruitment and notifications (Police Bharti).",
+    },
+    {
+      name: "Railway Recruitment Board (RRB) Mumbai",
+      url: "https://www.rrbmumbai.gov.in/",
+      description:
+        "Official portal for Railway Recruitment Board, Mumbai region.",
     },
     {
       name: "MyGov Portal",
