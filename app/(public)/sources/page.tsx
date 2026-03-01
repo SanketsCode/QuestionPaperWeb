@@ -7,23 +7,17 @@ export default function SourcesPage() {
       name: "Staff Selection Commission (SSC)",
       url: "https://ssc.gov.in",
       description:
-        "Official portal for SSC exams including CGL, CHSL, MTS, and GD Constable.",
-    },
-    {
-      name: "Union Public Service Commission (UPSC)",
-      url: "https://upsc.gov.in/",
-      description:
-        "Official portal for UPSC exams including Civil Services, NDA, CDS, and Engineering Services.",
+        "Official portal for SSC exams including CGL, CHSL, MTS, and others.",
     },
     {
       name: "Railway Recruitment Board (RRB)",
-      url: "https://indianrailways.gov.in/railwayboard/view_section.jsp?lang=0&id=0,4,1244",
+      url: "https://indianrailways.gov.in",
       description:
-        "Centralized portal for Indian Railways recruitment notifications and regional RRB links.",
+        "Centralized portal for Indian Railways recruitment notifications.",
     },
     {
       name: "RRB Mumbai",
-      url: "https://www.rrbmumbai.gov.in/",
+      url: "https://www.rrbmumbai.gov.in",
       description:
         "Official portal for Railway Recruitment Board, Mumbai region updates.",
     },
@@ -35,31 +29,30 @@ export default function SourcesPage() {
     },
     {
       name: "Maharashtra State Police (Police Bharti)",
-      url: "https://mahapolice.gov.in/",
+      url: "https://mahapolice.gov.in",
       description:
         "Official recruitment portal for Maharashtra State Police constables and other ranks.",
     },
     {
-      name: "Join Indian Army (Agniveer & Others)",
-      url: "https://joinindianarmy.nic.in/",
+      name: "Join Indian Army (Agniveer & Army GD)",
+      url: "https://joinindianarmy.nic.in",
       description:
         "Official portal for Indian Army recruitment including Agniveer and regular commissions.",
     },
     {
-      name: "Indian Air Force (AFCAT & AgniveerVayu)",
+      name: "Indian Air Force (AFCAT)",
       url: "https://afcat.cdac.in/AFCAT/",
       description:
-        "Official portal for Air Force Common Admission Test and AgniveerVayu recruitment.",
+        "Official portal for Air Force Common Admission Test and recruitment.",
     },
     {
-      name: "MyGov.in",
-      url: "https://www.mygov.in/",
-      description:
-        "Government of India's citizen engagement and information platform.",
+      name: "Central Reserve Police Force (CRPF)",
+      url: "https://crpf.gov.in",
+      description: "Official portal for CRPF recruitment and notifications.",
     },
     {
       name: "National Career Service (NCS)",
-      url: "https://www.ncs.gov.in/",
+      url: "https://www.ncs.gov.in",
       description:
         "A primary portal for various government job notifications and career services.",
     },
@@ -93,9 +86,9 @@ export default function SourcesPage() {
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Transparency is our priority. Below you will find the official
-              sources of the information we provide in our app, along with
-              important disclaimers regarding our service as an independent
-              educational platform.
+              sources of the exam information we track, along with important
+              disclaimers regarding our service as an independent educational
+              platform.
             </p>
           </div>
 
@@ -111,29 +104,30 @@ export default function SourcesPage() {
                 </h3>
                 <div className="text-orange-700 space-y-3 font-medium">
                   <p>
-                    <strong>Question Paper – Exam Prep App</strong> is an
-                    independent educational platform created to help students
-                    prepare for competitive exams through simulators and mock
-                    tests.
+                    <strong>Question Paper (Exam App)</strong> is an INDEPENDENT
+                    educational platform created by a private entity.
                   </p>
                   <p>
                     <strong>IMPORTANT:</strong> This app is <strong>NOT</strong>{" "}
                     affiliated with, endorsed by, authorized by, or in any way
                     officially connected with any government entity, agency, or
-                    official organization.
+                    department. We do not represent any government organization.
                   </p>
                   <p>
-                    We collect publicly available educational resources,
-                    previous year question papers, and exam practice content
-                    directly from official government portals (listed below)
-                    strictly for educational and practice purposes.
+                    The exam dates, syllabus, and notifications referenced in
+                    the app are collected from the publicly available official
+                    government websites listed below strictly for students'
+                    convenience.
                   </p>
                   <p>
+                    <strong>
+                      All mock tests, question banks, and practice materials are
+                      independently created by our team for educational and
+                      practice purposes only.
+                    </strong>{" "}
                     Users are strongly advised to always verify exam
-                    notifications, results, and recruitment updates directly
-                    from the respective official government websites. We do not
-                    guarantee the absolute accuracy of the information curated
-                    here.
+                    notifications and recruitment updates directly from the
+                    respective official government websites.
                   </p>
                 </div>
               </div>
@@ -147,8 +141,8 @@ export default function SourcesPage() {
                 Official Sources of Information
               </h2>
               <p className="text-sm text-gray-500 mt-1">
-                All data is curated from these official portals for educational
-                use:
+                We track the following official government portals for syllabus
+                and exam updates:
               </p>
             </div>
 
